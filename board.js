@@ -122,7 +122,7 @@
       const when=i.liveOnly?'NOW':new Date(i.start).toLocaleString();
       const badge=i.active?'<span class="badge active">ACTIVE</span>':'<span class="badge resolved">RESOLVED</span>';
       return `<div class="ev"><div class="when">${when}</div><div class="svc ${i.service}">${svc.name.split(' ')[0]}</div><div class="title">${i.name}${badge}<div style="color:#8B9894;font-size:11px;margin-top:3px">${i.status}</div></div></div>`;
-    }).join('') : <div class="ev"><div class="when">—</div><div class="svc">ALL</div><div class="title">No incidents in the last 48 hours from available official feeds.</div></div>`;
+    }).join('') : `<div class="ev"><div class="when">—</div><div class="svc">ALL</div><div class="title">No incidents in the last 48 hours from available official feeds.</div></div>`;
   }
   async function refreshOne(s){ try{ if(s.kind==='statuspage') await loadStatuspage(s); else await loadXai(s); } catch(e){ state[s.id].incidents=state[s.id].incidents||[]; setCard(s.id,{level:.35,label:'FEED ERROR',color:YELLOW,detail:String(e.message||e)},[]); } }
   async function refreshAll(){ document.getElementById('footMsg').textContent='refreshing…'; await Promise.all(services.map(refreshOne)); renderTimeline(); document.getElementById('updated').textContent=new Date().toLocaleString(); document.getElementById('footMsg').textContent='browser fetches · auto 30s'; }
