@@ -6,60 +6,61 @@
 <meta name="theme-color" content="#050708">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="AI Live Gauge">
-<meta name="mobile-web-app-capable" content="yes">
 <title>AI Live Gauge Board · SKIIWA</title>
-<meta name="description" content="Live themed gauges + 48-hour correlated outage history for Claude, xAI/Grok, OpenAI, and GitHub. Real official status feeds.">
+<meta name="description" content="Live gauges + 48-hour correlated outage history for Claude, xAI/Grok, OpenAI, and GitHub.">
 <meta property="og:title" content="AI Live Gauge Board">
 <meta property="og:description" content="Live gauges and a 48-hour correlated outage timeline for Claude, Grok, ChatGPT, and GitHub.">
-<meta property="og:type" content="website">
 <meta property="og:url" content="https://skiiwa67-collab.github.io/ai-live-gauge-board/">
-<link rel="canonical" href="https://skiiwa67-collab.github.io/ai-live-gauge-board/">
 <style>
-:root{--bg:#050708;--ink:#F3F6F4;--muted:#8B9894;--amber:#FFB020;--teal:#3EE0D4;--red:#FF3B3B;--green:#3DFF8A;--yellow:#FFD84D;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"DejaVu Sans Mono",monospace;--pad:clamp(10px,2.2vw,28px);--gap:clamp(8px,1.4vw,18px);--title:clamp(14px,1.7vw + 10px,28px);--body:clamp(12px,.55vw + 11px,16px);--small:clamp(11px,.4vw + 10px,14px);--tiny:clamp(10px,.3vw + 9px,13px);--card-min:clamp(220px,28vw,420px);--wrap:min(1600px,100%);--gauge-w:clamp(150px,20vw,260px)}
-*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--mono)}
-body{min-height:100vh;min-height:100dvh;background:radial-gradient(70% 45% at 50% -8%,rgba(62,224,212,.09),transparent 55%),linear-gradient(rgba(62,224,212,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(62,224,212,.03) 1px,transparent 1px),var(--bg);background-size:auto,28px 28px,28px 28px,auto}
-.wrap{width:var(--wrap);margin:0 auto;padding:var(--pad);padding-bottom:calc(var(--pad) + env(safe-area-inset-bottom,0px))}
-.top{display:flex;justify-content:space-between;gap:var(--gap);align-items:flex-start;flex-wrap:wrap;margin-bottom:clamp(10px,1.5vw,18px)}
-h1{margin:0;font-size:var(--title);letter-spacing:.14em;text-transform:uppercase;line-height:1.2}
-.sub{margin:6px 0 0;font-size:var(--small);color:var(--muted);line-height:1.5;max-width:min(52rem,100%)}
-.stamp{font-size:var(--tiny);letter-spacing:.16em;color:var(--amber);border:1px solid rgba(255,176,32,.42);padding:4px 8px;background:rgba(5,8,10,.7)}
-.meta{display:flex;flex-wrap:wrap;gap:8px clamp(10px,2vw,18px);margin:0 0 clamp(12px,1.8vw,20px);font-size:var(--small);color:var(--muted)}.meta b{color:var(--ink)}.meta a{color:var(--teal);text-decoration:none}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,var(--card-min)),1fr));gap:var(--gap)}
-.card{border:1px solid rgba(255,255,255,.10);background:rgba(11,17,20,.94);padding:clamp(10px,1.2vw,16px);position:relative;overflow:hidden;min-width:0}
+:root{--bg:#050708;--ink:#F3F6F4;--muted:#8B9894;--amber:#FFB020;--teal:#3EE0D4;--red:#FF3B3B;--green:#3DFF8A;--yellow:#FFD84D;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"DejaVu Sans Mono",monospace;--pad:clamp(8px,1.2vw,16px);--gap:clamp(6px,1vw,12px);--title:clamp(13px,1.2vw + 8px,20px);--body:clamp(11px,.35vw + 10px,13px);--small:clamp(10px,.25vw + 9px,12px);--tiny:clamp(9px,.2vw + 8px,11px);--wrap:min(1480px,100%);--gauge-w:clamp(88px,9vw,120px)}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--mono)}
+body{min-height:100vh;min-height:100dvh;background:radial-gradient(70% 40% at 50% -10%,rgba(62,224,212,.07),transparent 55%),var(--bg)}
+.wrap{width:var(--wrap);margin:0 auto;padding:var(--pad)}
+.top{display:flex;justify-content:space-between;gap:var(--gap);align-items:flex-start;flex-wrap:wrap;margin-bottom:8px}
+h1{margin:0;font-size:var(--title);letter-spacing:.12em;text-transform:uppercase}
+.sub{margin:4px 0 0;font-size:var(--small);color:var(--muted);line-height:1.4;max-width:60rem}
+.stamp{font-size:var(--tiny);letter-spacing:.14em;color:var(--amber);border:1px solid rgba(255,176,32,.42);padding:3px 7px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 10px;font-size:var(--small);color:var(--muted)}.meta b{color:var(--ink)}.meta a{color:var(--teal);text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap)}
+.card{border:1px solid rgba(255,255,255,.10);background:rgba(11,17,20,.94);padding:8px 10px 10px;position:relative;min-width:0;display:flex;flex-direction:column}
 .card::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--bar,var(--muted))}
-.card.theme-claude{background:linear-gradient(180deg,rgba(88,70,140,.16),rgba(11,17,20,.96))}
-.card.theme-openai{background:linear-gradient(180deg,rgba(16,163,127,.12),rgba(11,17,20,.96))}
-.card.theme-xai{background:linear-gradient(180deg,rgba(180,40,40,.14),rgba(11,17,20,.96))}
-.card.theme-github{background:linear-gradient(180deg,rgba(88,166,255,.10),rgba(11,17,20,.96))}
-.head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px;flex-wrap:wrap}
-.name{font-size:var(--body);letter-spacing:.08em;color:var(--teal)}.state{font-size:var(--tiny);letter-spacing:.1em;text-transform:uppercase}
-.theme-tag{font-size:var(--tiny);color:var(--muted);margin:0 0 6px;letter-spacing:.06em}
-.desc{font-size:var(--small);color:var(--muted);min-height:2.6em;line-height:1.4;margin:0 0 8px;overflow-wrap:anywhere}
-.gauge-wrap{display:flex;justify-content:center;padding:2px 0}canvas{width:var(--gauge-w);height:auto;aspect-ratio:36/24;display:block;max-width:100%}
-.comps{margin-top:8px;border-top:1px solid rgba(255,255,255,.07);padding-top:8px;max-height:min(28vh,160px);overflow:auto}
-.comp{display:flex;justify-content:space-between;gap:8px;font-size:var(--tiny);padding:4px 0;color:var(--muted)}.comp .ok{color:var(--green)}.comp .bad{color:var(--red)}.comp .warn{color:var(--yellow)}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-a.btn,button.btn{appearance:none;border:1px solid rgba(62,224,212,.35);background:#071016;color:var(--teal);font:inherit;font-size:var(--tiny);letter-spacing:.08em;padding:clamp(8px,1vw,12px) clamp(10px,1.2vw,14px);text-decoration:none;cursor:pointer;min-height:40px}
-.section{margin-top:clamp(18px,3vw,28px)}.section h2{margin:0 0 8px;font-size:clamp(12px,1.1vw + 10px,18px);letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
-.section .hint{margin:0 0 12px;font-size:var(--small);color:var(--muted);line-height:1.45}
-.timeline{border:1px solid rgba(255,255,255,.10);background:rgba(8,12,14,.92);padding:clamp(10px,1.2vw,16px)}
-.tl-axis{position:relative;height:clamp(96px,14vw,130px);margin:18px 0 10px;border-bottom:1px solid rgba(255,255,255,.12)}
-.tl-lane{position:absolute;left:72px;right:0;height:12px;border-radius:99px;background:rgba(255,255,255,.045)}
+.card.theme-claude{--accent:#C4B5FD}.card.theme-openai{--accent:#5EEAD4}.card.theme-xai{--accent:#FCA5A5}.card.theme-github{--accent:#93C5FD}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin-bottom:2px}
+.name{font-size:var(--body);letter-spacing:.06em;color:var(--accent,var(--teal))}
+.state{font-size:var(--tiny);letter-spacing:.08em;text-transform:uppercase}
+.theme-tag{font-size:var(--tiny);color:var(--muted);margin:0 0 4px}
+.desc{font-size:var(--tiny);color:var(--muted);line-height:1.35;margin:0 0 4px;min-height:2.4em;overflow-wrap:anywhere}
+.gauge-wrap{display:flex;justify-content:center;padding:0}.gauge-wrap canvas{width:var(--gauge-w);height:auto;aspect-ratio:36/22;display:block}
+.comps{margin-top:4px;border-top:1px solid rgba(255,255,255,.07);padding-top:4px;max-height:7.5em;overflow:auto}
+.comp{display:flex;justify-content:space-between;gap:6px;font-size:var(--tiny);padding:2px 0;color:var(--muted)}.comp .ok{color:var(--green)}.comp .bad{color:var(--red)}.comp .warn{color:var(--yellow)}
+.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+a.btn,button.btn{appearance:none;border:1px solid rgba(62,224,212,.35);background:#071016;color:var(--teal);font:inherit;font-size:var(--tiny);letter-spacing:.06em;padding:6px 8px;text-decoration:none;cursor:pointer}
+.section{margin-top:10px}.section h2{margin:0 0 4px;font-size:var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--amber)}
+.section .hint{margin:0 0 6px;font-size:var(--tiny);color:var(--muted);line-height:1.4}
+.timeline{border:1px solid rgba(255,255,255,.10);background:rgba(8,12,14,.92);padding:8px 10px}
+.tl-axis{position:relative;height:88px;margin:14px 0 6px;border-bottom:1px solid rgba(255,255,255,.12)}
+.tl-lane{position:absolute;left:64px;right:0;height:10px;border-radius:99px;background:rgba(255,255,255,.045)}
 .tl-lane .seg{position:absolute;top:0;bottom:0;border-radius:99px}
-.tl-lane-label{position:absolute;left:-72px;width:68px;top:-2px;font-size:10px;letter-spacing:.08em}
-.tl-hours{display:flex;justify-content:space-between;font-size:10px;color:#667573;padding-left:72px}
-.events{display:flex;flex-direction:column;gap:8px;max-height:min(48vh,440px);overflow:auto;margin-top:12px}
-.ev{display:grid;grid-template-columns:minmax(96px,120px) 84px 1fr;gap:8px;align-items:start;padding:8px;border:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.22)}
-.ev .when{font-size:var(--tiny);color:var(--muted)}.ev .svc{font-size:var(--tiny);letter-spacing:.08em}.ev .title{font-size:var(--small);line-height:1.4;overflow-wrap:anywhere}
+.tl-lane-label{position:absolute;left:-64px;width:60px;top:-2px;font-size:9px;letter-spacing:.06em}
+.tl-hours{display:flex;justify-content:space-between;font-size:9px;color:#667573;padding-left:64px}
+.events{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:140px;overflow:auto;margin-top:8px}
+.ev{display:grid;grid-template-columns:86px 64px 1fr;gap:6px;align-items:start;padding:6px;border:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.22)}
+.ev .when,.ev .svc{font-size:var(--tiny)}.ev .when{color:var(--muted)}.ev .title{font-size:var(--tiny);line-height:1.35;overflow-wrap:anywhere}
 .ev .svc.claude{color:#C4B5FD}.ev .svc.openai{color:#5EEAD4}.ev .svc.xai{color:#FCA5A5}.ev .svc.github{color:#93C5FD}
-.badge{display:inline-block;font-size:10px;letter-spacing:.08em;padding:2px 6px;border:1px solid rgba(255,255,255,.15);margin-left:6px}
-.badge.resolved{color:var(--green);border-color:rgba(61,255,138,.35)}.badge.active{color:var(--red);border-color:rgba(255,59,59,.4)}
-.note{margin-top:clamp(12px,2vw,20px);border-left:2px solid var(--amber);padding:clamp(8px,1vw,12px);background:#0a0906;font-size:var(--small);line-height:1.55;color:#c9cfcc}
-.foot{margin-top:clamp(12px,1.8vw,18px);font-size:var(--tiny);letter-spacing:.1em;color:#5d6a66;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.pulse{animation:pulse 1.4s ease-in-out infinite}@keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
-@media (max-width:560px){.ev{grid-template-columns:1fr;gap:4px}.grid{grid-template-columns:1fr}h1{letter-spacing:.08em}.tl-lane{left:56px}.tl-lane-label{left:-56px;width:52px}.tl-hours{padding-left:56px}}
-@media (min-width:1400px){.grid{grid-template-columns:repeat(4,1fr)}}
-@media (min-width:2000px){:root{--wrap:min(2200px,96vw);--card-min:360px}}
+.badge{display:inline-block;font-size:9px;letter-spacing:.06em;padding:1px 5px;border:1px solid rgba(255,255,255,.15);margin-left:4px}
+.badge.resolved{color:var(--green)}.badge.active{color:var(--red)}
+.note{margin-top:8px;border-left:2px solid var(--amber);padding:6px 8px;background:#0a0906;font-size:var(--tiny);line-height:1.45;color:#c9cfcc}
+.foot{margin-top:6px;font-size:var(--tiny);letter-spacing:.08em;color:#5d6a66;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.pulse{animation:pulse 1.2s ease-in-out infinite}@keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
+@media (max-width:1100px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.events{grid-template-columns:1fr}}
+@media (max-width:640px){.grid{grid-template-columns:1fr}.ev{grid-template-columns:1fr}.events{max-height:none}.comps{max-height:9em}:root{--gauge-w:clamp(110px,42vw,150px)}}
+@media (min-width:1200px) and (min-height:800px){
+  body{overflow:hidden}
+  .wrap{height:100vh;height:100dvh;display:flex;flex-direction:column}
+  .section{flex:1;min-height:0;display:flex;flex-direction:column}
+  .timeline{flex:1;min-height:0;display:flex;flex-direction:column}
+  .events{flex:1;max-height:none}
+}
 @media (prefers-reduced-motion:reduce){.pulse{animation:none}}
 </style>
 </head>
@@ -67,23 +68,23 @@ a.btn,button.btn{appearance:none;border:1px solid rgba(62,224,212,.35);backgroun
 <div class="wrap">
   <div class="top"><div>
     <h1>AI Live Gauge Board</h1>
-    <p class="sub">Live themed gauges + a shared 48-hour outage timeline. Real official feeds only. Glance and see when Claude, Grok, and ChatGPT fall over together.</p>
-  </div><div class="stamp">r4</div></div>
+    <p class="sub">Live gauges + shared 48-hour outage timeline. Official feeds only. Overlapping bars = simultaneous outage.</p>
+  </div><div class="stamp">r5</div></div>
   <div class="meta">
     <div>Updated: <b id="updated">—</b></div>
-    <div>Auto-refresh: <b>30s in your browser</b></div>
-    <div>Window: <b>last 48 hours</b></div>
+    <div>Auto-refresh: <b>30s</b></div>
+    <div>Window: <b>48h</b></div>
     <div>Repo: <b><a href="https://github.com/skiiwa67-collab/ai-live-gauge-board" target="_blank" rel="noopener">github.com/skiiwa67-collab/ai-live-gauge-board</a></b></div>
   </div>
   <div class="grid" id="grid"></div>
   <div class="section">
     <h2>48-hour correlated history</h2>
-    <p class="hint">Same time axis for every service. Overlapping bars = simultaneous outage. Claude / OpenAI / GitHub use official incident JSON. xAI has no public incident API, so its lane only shows what the live status page currently marks.</p>
+    <p class="hint">Same time axis for Claude, OpenAI, xAI, GitHub. xAI statuses use available/outage markers from status.x.ai.</p>
     <div class="timeline"><div class="tl-axis" id="axis"></div><div class="tl-hours" id="hours"></div><div class="events" id="events"></div></div>
   </div>
-  <div class="note"><b>Rule.</b> Agents spin &gt; ~2 minutes → open this board first. Red gauge or stacked timeline bars = wait. No invented outages.</div>
-  <div class="foot"><div>SKIIWA · AI LIVE GAUGE BOARD</div><div id="footMsg">loading feeds…</div></div>
+  <div class="note"><b>Rule.</b> Agents spin &gt; ~2 min → open this board. Red gauge / stacked bars = wait.</div>
+  <div class="foot"><div>SKIIWA · AI LIVE GAUGE BOARD</div><div id="footMsg">loading…</div></div>
 </div>
-<script src="./board.js?v=5"></script>
+<script src="./board.js?v=6"></script>
 </body>
 </html>
