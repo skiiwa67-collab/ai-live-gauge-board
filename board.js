@@ -328,15 +328,28 @@
     document.getElementById('updated').textContent=new Date().toLocaleString();
     document.getElementById('footMsg').textContent='browser fetches · auto 30s';
   }
+  const LIVE_THEMES=new Set(['night','leonardo']);
+  const THEME_ALIASES={folio:'leonardo',r8:'night',dark:'night'};
+  function resolveTheme(raw){
+    let t=String(raw||'night').toLowerCase().trim();
+    if(THEME_ALIASES[t]) t=THEME_ALIASES[t];
+    if(LIVE_THEMES.has(t)) return t;
+    return 'night'; // stubs / unknown → night (do not break)
+  }
   function applyTheme(name){
-    const leo=name==='leonardo';
+    const theme=resolveTheme(name);
+    const leo=theme==='leonardo';
     if(leo) document.documentElement.setAttribute('data-theme','leonardo');
     else document.documentElement.removeAttribute('data-theme');
-    try{ localStorage.setItem('gauge-theme', leo?'leonardo':'night'); }catch(e){}
+    try{ localStorage.setItem('gauge-theme', theme); }catch(e){}
     const stamp=document.getElementById('stamp');
-    if(stamp) stamp.textContent=leo?'r9·FOLIO':'r9';
-    const btn=document.getElementById('themeToggle');
-    if(btn) btn.textContent=leo?'NIGHT':'FOLIO';
+    if(stamp) stamp.textContent=leo?'r10·FOLIO':'r10';
+    const sel=document.getElementById('themeSelect');
+    if(sel){
+      const opt=[...sel.options].find(o=>o.value===theme && !o.disabled);
+      if(opt) sel.value=theme;
+      else sel.value='night';
+    }
     const meta=document.querySelector('meta[name="theme-color"]');
     if(meta) meta.setAttribute('content', leo?'#F3E6CF':'#050708');
     refreshThemeConsts();
@@ -346,28 +359,30 @@
     let theme='night';
     try{
       const q=new URLSearchParams(location.search).get('theme');
-      if(q==='leonardo'||q==='folio') theme='leonardo';
-      else if(q==='night'||q==='r8'||q==='dark') theme='night';
+      if(q) theme=resolveTheme(q);
       else {
         const stored=localStorage.getItem('gauge-theme');
-        if(stored==='leonardo') theme='leonardo';
+        if(stored) theme=resolveTheme(stored);
       }
     }catch(e){}
     applyTheme(theme);
   }
 
   document.addEventListener('click',ev=>{
-    const tog=ev.target.closest('#themeToggle');
-    if(tog){
-      const next=isLeonardo()?'night':'leonardo';
-      applyTheme(next);
-      refreshAll();
-      return;
-    }
     const t=ev.target.closest('[data-refresh]'); if(!t) return;
     const id=t.getAttribute('data-refresh'); const s=services.find(x=>x.id===id);
     if(s) refreshOne(s).then(renderTimeline);
   });
+  const themeSelect=document.getElementById('themeSelect');
+  if(themeSelect){
+    themeSelect.addEventListener('change',()=>{
+      const v=themeSelect.value;
+      // disabled options cannot fire change; still guard stubs
+      if(!LIVE_THEMES.has(v)){ themeSelect.value=isLeonardo()?'leonardo':'night'; return; }
+      applyTheme(v);
+      refreshAll();
+    });
+  }
   initTheme();
   refreshAll(); setInterval(refreshAll,30000);
 })();
