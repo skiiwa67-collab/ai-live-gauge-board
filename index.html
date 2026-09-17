@@ -135,15 +135,57 @@ a.btn:focus-visible,button.btn:focus-visible{outline:2px solid var(--teal);outli
   .events{flex:1;max-height:none}
 }
 @media (prefers-reduced-motion:reduce){.pulse{animation:none}}
+
+.theme-ctl{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.theme-ctl .stamp{align-self:flex-end}
+.theme-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.theme-row label{font-size:var(--tiny);letter-spacing:.16em;text-transform:uppercase;color:var(--amber);font-weight:700}
+#themeSelect{
+  appearance:none;-webkit-appearance:none;
+  font:inherit;font-size:clamp(14px,.5vw + 12px,18px);font-weight:700;
+  letter-spacing:.04em;line-height:1.2;
+  min-width:min(280px,78vw);max-width:100%;
+  padding:8px 36px 8px 12px;
+  color:var(--ink);background:var(--bg-elev);
+  border:2px solid var(--line-amber);
+  border-radius:2px;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,var(--amber) 50%),linear-gradient(135deg,var(--amber) 50%,transparent 50%);
+  background-position:calc(100% - 16px) calc(50% - 3px),calc(100% - 10px) calc(50% - 3px);
+  background-size:6px 6px,6px 6px;background-repeat:no-repeat;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+#themeSelect:hover{border-color:var(--amber);background-color:rgba(255,176,32,.08)}
+#themeSelect:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+#themeSelect option:disabled{color:#667573;font-style:italic}
+@media (max-width:640px){
+  .theme-ctl{align-items:stretch;width:100%}
+  .theme-row{justify-content:flex-start}
+  #themeSelect{min-width:0;width:100%}
+}
 </style>
-<link rel="stylesheet" href="./theme-leonardo.css">
+<link rel="stylesheet" href="./theme-leonardo.css?v=10">
 </head>
 <body>
 <div class="wrap">
   <div class="top"><div>
     <h1>AI Live Gauge Board</h1>
     <p class="sub">Live gauges + shared 48-hour outage timeline. Official feeds only. Overlapping bars = simultaneous outage.</p>
-  </div><div class="stamp" id="stamp">r9</div></div>
+  </div>
+  <div class="theme-ctl">
+    <div class="stamp" id="stamp">r10</div>
+    <div class="theme-row">
+      <label for="themeSelect">Theme</label>
+      <select id="themeSelect" aria-label="Theme">
+        <option value="night">Night · Ada</option>
+        <option value="leonardo">Leonardo · Da Vinci</option>
+        <option value="spacex" disabled>SpaceX / xAI · Elon — soon</option>
+        <option value="claude" disabled>Claude · Da Vinci — soon</option>
+        <option value="cursor" disabled>Cursor · Cursor — soon</option>
+        <option value="github" disabled>GitHub · GitHub — soon</option>
+        <option value="skippy" disabled>Skippy · Skippy the Magnificent — soon</option>
+      </select>
+    </div>
+  </div></div>
   <div class="meta">
     <div>Updated: <b id="updated">—</b></div>
     <div>Auto-refresh: <b>30s</b></div>
@@ -163,10 +205,10 @@ a.btn:focus-visible,button.btn:focus-visible{outline:2px solid var(--teal);outli
   </div>
   <div class="note"><b>Rule.</b> Agents spin &gt; ~2 min → open this board. Red gauge / stacked bars = wait.</div>
   <div class="foot">
-    <div>SKIIWA · AI LIVE GAUGE BOARD · <button type="button" class="btn" id="themeToggle" title="Toggle Folio / Night">FOLIO</button></div>
+    <div>SKIIWA · AI LIVE GAUGE BOARD</div>
     <div><a href="https://github.com/skiiwa67-collab/ai-live-gauge-board" target="_blank" rel="noopener">repo</a> · <span id="footMsg">loading…</span></div>
   </div>
 </div>
-<script src="./board.js?v=9"></script>
+<script src="./board.js?v=10"></script>
 </body>
 </html>
