@@ -1,0 +1,187 @@
+/* GitHub · Da Vinci — additive. Active when html[data-theme="github"]. No Octocat. */
+[data-theme="github"] {
+  --bg: #0D1117;
+  --bg-elev: #161B22;
+  --bg-well: #010409;
+  --bg-card: #161B22;
+  --ink: #E6EDF3;
+  --ink-soft: #C9D1D9;
+  --muted: #8B949E;
+
+  --line: rgba(240, 246, 252, 0.10);
+  --line-strong: rgba(240, 246, 252, 0.18);
+  --primer-blue: #2F81F7;
+  --primer-blue-dim: rgba(47, 129, 247, 0.16);
+  --focus: #2F81F7;
+
+  --ok: #238636;
+  --ok-bright: #3FB950;
+  --ok-dim: rgba(63, 185, 80, 0.14);
+  --ok-cell: #26A641;
+  --warn: #D29922;
+  --warn-bright: #E3B341;
+  --warn-dim: rgba(226, 179, 65, 0.14);
+  --bad: #DA3633;
+  --bad-bright: #F85149;
+  --bad-dim: rgba(248, 81, 73, 0.14);
+  --unknown: #6E7681;
+  --err: #D29922;
+
+  --green: var(--ok-bright);
+  --yellow: var(--warn-bright);
+  --red: var(--bad-bright);
+  --amber: var(--primer-blue);
+  --teal: var(--primer-blue);
+
+  --acc-claude: #A371F7;
+  --acc-openai: #3FB950;
+  --acc-xai: #F85149;
+  --acc-github: #2F81F7;
+  --acc-cursor: #A371F7;
+  --acc-cloudflare: #F0883E;
+  --acc-notion: #C9D1D9;
+
+  --gauge-track: rgba(110, 118, 129, 0.35);
+  --gauge-tick: rgba(230, 237, 243, 0.35);
+  --gauge-ring: rgba(47, 129, 247, 0.40);
+
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "Cascadia Mono", "Liberation Mono", Menlo, Consolas, monospace;
+}
+
+[data-theme="github"] body {
+  font-family: var(--mono);
+  color: var(--ink);
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 11px, rgba(240, 246, 252, 0.03) 11px, rgba(240, 246, 252, 0.03) 12px),
+    repeating-linear-gradient(90deg, transparent, transparent 11px, rgba(240, 246, 252, 0.03) 11px, rgba(240, 246, 252, 0.03) 12px),
+    radial-gradient(50% 35% at 50% -5%, rgba(47, 129, 247, 0.08), transparent 50%),
+    var(--bg);
+}
+
+[data-theme="github"] h1,
+[data-theme="github"] .section h2 {
+  font-family: var(--sans);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  border-bottom: 2px solid var(--ok-bright);
+  text-transform: none;
+}
+
+[data-theme="github"] .section h2 {
+  border-bottom-width: 1px;
+  display: inline-block;
+  padding-bottom: 2px;
+}
+
+[data-theme="github"] .stamp {
+  color: var(--ok-bright);
+  border: 1px solid color-mix(in srgb, var(--ok) 55%, transparent);
+  background: var(--ok-dim);
+  font-family: var(--mono);
+  letter-spacing: 0.12em;
+}
+
+[data-theme="github"] .gold-strip {
+  height: 2px;
+  background: linear-gradient(90deg, var(--ok-bright), var(--primer-blue) 40%, transparent 70%);
+}
+
+[data-theme="github"] .card {
+  background: var(--bg-card);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+[data-theme="github"] .card::before {
+  width: 4px;
+  background: var(--bar, var(--muted));
+  border-radius: 6px 0 0 6px;
+}
+
+[data-theme="github"] .card[data-level="ok"] { --bar: var(--ok-bright); }
+[data-theme="github"] .card[data-level="warn"] {
+  --bar: var(--warn-bright);
+  border-color: rgba(226, 179, 65, 0.40);
+  background: linear-gradient(90deg, var(--warn-dim), transparent 28%), var(--bg-card);
+}
+[data-theme="github"] .card[data-level="bad"] {
+  --bar: var(--bad-bright);
+  border-color: rgba(248, 81, 73, 0.45);
+  background: linear-gradient(90deg, var(--bad-dim), transparent 28%), var(--bg-card);
+}
+[data-theme="github"] .card[data-level="err"] {
+  --bar: var(--err);
+  border-style: dashed;
+}
+
+[data-theme="github"] .card[data-level="ok"] .state { color: var(--ok-bright); }
+[data-theme="github"] .card[data-level="warn"] .state { color: var(--warn-bright); }
+[data-theme="github"] .card[data-level="bad"] .state { color: var(--bad-bright); }
+[data-theme="github"] .card[data-level="err"] .state { color: var(--err); }
+
+[data-theme="github"] .card:focus-within {
+  outline: 2px solid var(--primer-blue);
+  outline-offset: 2px;
+}
+
+[data-theme="github"] .theme-claude .name { color: var(--acc-claude); }
+[data-theme="github"] .theme-openai .name { color: var(--acc-openai); }
+[data-theme="github"] .theme-xai .name { color: var(--acc-xai); }
+[data-theme="github"] .theme-github .name { color: var(--acc-github); }
+[data-theme="github"] .theme-cursor .name { color: var(--acc-cursor); }
+[data-theme="github"] .theme-cloudflare .name { color: var(--acc-cloudflare); }
+[data-theme="github"] .theme-notion .name { color: var(--acc-notion); }
+
+[data-theme="github"] .comps { border-top-color: var(--line); }
+[data-theme="github"] .comp .ok { color: var(--ok-bright); }
+[data-theme="github"] .comp .warn { color: var(--warn-bright); }
+[data-theme="github"] .comp .bad { color: var(--bad-bright); }
+
+[data-theme="github"] a.btn,
+[data-theme="github"] button.btn {
+  border: 1px solid var(--line-strong);
+  background: var(--bg-elev);
+  color: var(--primer-blue);
+  border-radius: 6px;
+}
+[data-theme="github"] a.btn:hover,
+[data-theme="github"] button.btn:hover {
+  border-color: var(--primer-blue);
+  background: var(--primer-blue-dim);
+}
+
+[data-theme="github"] .timeline {
+  background: var(--bg-well);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+}
+[data-theme="github"] .tl-lane {
+  background: rgba(240, 246, 252, 0.04);
+  border-radius: 0;
+}
+[data-theme="github"] .tl-hours { color: var(--muted); }
+
+[data-theme="github"] .ev {
+  border-color: var(--line);
+  background: rgba(1, 4, 9, 0.55);
+}
+[data-theme="github"] .ev.active {
+  border-left: 3px solid var(--bad-bright);
+  background: linear-gradient(90deg, var(--bad-dim), transparent 40%), rgba(1, 4, 9, 0.55);
+}
+[data-theme="github"] .badge.resolved { color: var(--ok-bright); }
+[data-theme="github"] .badge.active { color: var(--bad-bright); }
+
+[data-theme="github"] .note {
+  border-left: 2px solid var(--ok-bright);
+  background: #010409;
+  color: var(--ink-soft);
+}
+[data-theme="github"] .meta { border-bottom-color: var(--line); color: var(--muted); }
+[data-theme="github"] .meta b { color: var(--ink); }
+[data-theme="github"] .sub { color: var(--muted); }
+[data-theme="github"] .foot { color: #6E7681; }
+[data-theme="github"] .foot a { color: var(--primer-blue); }
