@@ -1,0 +1,247 @@
+/* Daylight · Saxon — NEW id. Active when html[data-theme="saxon-day"].
+   Soft-FAIL Ignition: identical to Skippy void+neon. This is noon pad white. */
+[data-theme="saxon-day"], .theme-saxon-day {
+  /* —— noon pad —— */
+  --bg: #F7F8FA;
+  --bg-elev: #FFFFFF;
+  --bg-well: #EEF1F5;
+  --bg-card: #FFFFFF;
+  --ink: #111827;
+  --ink-soft: #1F2937;
+  --muted: #6B7280;
+  --graphite: #374151;
+  --safety: #EA580C;
+
+  /* —— chrome: graphite print (NOT neon) —— */
+  --line: rgba(17, 24, 39, 0.12);
+  --line-strong: rgba(17, 24, 39, 0.28);
+  --line-amber: rgba(234, 88, 12, 0.40);
+  --line-ink: #111827;
+
+  /* —— STATUS ON WHITE (no neon Skippy DNA) —— */
+  --ok: #047857;
+  --ok-bright: #059669;
+  --ok-dim: rgba(4, 120, 87, 0.12);
+  --ok-glow: rgba(4, 120, 87, 0.22);
+
+  --warn: #B45309;
+  --warn-bright: #D97706;
+  --warn-dim: rgba(180, 83, 9, 0.12);
+
+  --bad: #DC2626;
+  --bad-bright: #EF4444;
+  --bad-dim: rgba(220, 38, 38, 0.12);
+  --bad-glow: rgba(220, 38, 38, 0.22);
+
+  --err: #7C3AED;
+  --err-dim: rgba(124, 58, 237, 0.12);
+  --unknown: #6B7280;
+
+  --green: var(--ok-bright);
+  --yellow: var(--warn-bright);
+  --red: var(--bad-bright);
+  --amber: var(--safety);
+  --teal: var(--graphite);
+
+  /* —— provider accents on white —— */
+  --acc-claude: #5B4B9A;
+  --acc-openai: #0F766E;
+  --acc-xai: #9A3412;
+  --acc-github: #1D4ED8;
+  --acc-cursor: #5B21B6;
+  --acc-cloudflare: #C2410C;
+  --acc-notion: #374151;
+
+  --gauge-track: rgba(17, 24, 39, 0.12);
+  --gauge-tick: rgba(17, 24, 39, 0.40);
+  --gauge-circle: rgba(17, 24, 39, 0.28);
+
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+[data-theme="saxon-day"] body {
+  font-family: var(--mono);
+  color: var(--ink);
+  background:
+    radial-gradient(80% 50% at 50% -10%, rgba(234, 88, 12, 0.06), transparent 55%),
+    radial-gradient(40% 30% at 100% 100%, rgba(4, 120, 87, 0.04), transparent 50%),
+    var(--bg);
+}
+
+[data-theme="saxon-day"] h1,
+[data-theme="saxon-day"] .section h2 {
+  font-family: var(--sans);
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 2px solid var(--graphite);
+}
+
+[data-theme="saxon-day"] .section h2 {
+  color: var(--graphite);
+  border-bottom-width: 1px;
+  display: inline-block;
+  padding-bottom: 2px;
+}
+
+[data-theme="saxon-day"] .state,
+[data-theme="saxon-day"] .comp,
+[data-theme="saxon-day"] .tl-hours {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="saxon-day"] .card {
+  background: var(--bg-card);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 1px 2px rgba(17, 24, 39, 0.06);
+  border-radius: 2px;
+}
+
+[data-theme="saxon-day"] .card::before {
+  width: 5px;
+  background: var(--bar);
+  box-shadow: none; /* zero neon glow */
+}
+
+[data-theme="saxon-day"] .card[data-level="ok"] { --bar: var(--ok); }
+[data-theme="saxon-day"] .card[data-level="warn"] {
+  --bar: var(--warn);
+  border-color: color-mix(in srgb, var(--warn) 40%, var(--line-strong));
+  background: linear-gradient(90deg, var(--warn-dim), transparent 32%), var(--bg-card);
+}
+[data-theme="saxon-day"] .card[data-level="bad"] {
+  --bar: var(--bad);
+  border-color: color-mix(in srgb, var(--bad) 45%, var(--line-strong));
+  background: linear-gradient(90deg, var(--bad-dim), transparent 32%), var(--bg-card);
+}
+[data-theme="saxon-day"] .card[data-level="err"] {
+  --bar: var(--err);
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--err) 45%, var(--line-strong));
+  background: linear-gradient(90deg, var(--err-dim), transparent 32%), var(--bg-card);
+}
+
+[data-theme="saxon-day"] .card:hover { border-color: var(--graphite); }
+[data-theme="saxon-day"] .card:focus-within {
+  outline: 2px solid var(--safety);
+  outline-offset: 2px;
+}
+
+[data-theme="saxon-day"] .card[data-level="ok"] .state { color: var(--ok); }
+[data-theme="saxon-day"] .card[data-level="warn"] .state { color: var(--warn); }
+[data-theme="saxon-day"] .card[data-level="err"] .state { color: var(--err); }
+[data-theme="saxon-day"] .card[data-level="bad"] .state { color: var(--bad); }
+
+[data-theme="saxon-day"] .theme-claude .name { color: var(--acc-claude); }
+[data-theme="saxon-day"] .theme-openai .name { color: var(--acc-openai); }
+[data-theme="saxon-day"] .theme-xai .name { color: var(--acc-xai); }
+[data-theme="saxon-day"] .theme-github .name { color: var(--acc-github); }
+[data-theme="saxon-day"] .theme-cursor .name { color: var(--acc-cursor); }
+[data-theme="saxon-day"] .theme-cloudflare .name { color: var(--acc-cloudflare); }
+[data-theme="saxon-day"] .theme-notion .name { color: var(--acc-notion); }
+
+[data-theme="saxon-day"] .comps { border-top-color: var(--line); }
+[data-theme="saxon-day"] .comp .ok { color: var(--ok); }
+[data-theme="saxon-day"] .comp .bad { color: var(--bad); }
+[data-theme="saxon-day"] .comp .warn { color: var(--warn); }
+
+[data-theme="saxon-day"] .timeline {
+  background: var(--bg-well);
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+}
+
+[data-theme="saxon-day"] .tl-lane {
+  background: rgba(17, 24, 39, 0.05);
+  box-shadow: inset 0 0 0 1px var(--line);
+  height: 12px;
+  border-radius: 0;
+}
+
+[data-theme="saxon-day"] .tl-lane .seg { border-radius: 0; }
+
+[data-theme="saxon-day"] .tl-axis {
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent calc(100% / 48 - 1px),
+    rgba(17, 24, 39, 0.08) calc(100% / 48 - 1px),
+    rgba(17, 24, 39, 0.08) calc(100% / 48)
+  );
+  border-bottom-color: var(--line-strong);
+}
+
+[data-theme="saxon-day"] .tl-hours { color: var(--muted); }
+
+[data-theme="saxon-day"] .ev {
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.85);
+}
+[data-theme="saxon-day"] .ev.active {
+  border-left: 3px solid var(--bad);
+  background: linear-gradient(90deg, var(--bad-dim), transparent 40%), #fff;
+}
+[data-theme="saxon-day"] .badge { border-color: var(--line); }
+[data-theme="saxon-day"] .badge.resolved { color: var(--ok); }
+[data-theme="saxon-day"] .badge.active { color: var(--bad); }
+
+[data-theme="saxon-day"] a.btn,
+[data-theme="saxon-day"] button.btn {
+  border: 1px solid var(--line-strong);
+  background: var(--bg-elev);
+  color: var(--graphite);
+  opacity: 0.95;
+}
+[data-theme="saxon-day"] a.btn:hover,
+[data-theme="saxon-day"] button.btn:hover {
+  background: #F3F4F6;
+  border-color: var(--graphite);
+  color: var(--ink);
+  opacity: 1;
+}
+
+[data-theme="saxon-day"] .stamp {
+  font-family: var(--sans);
+  color: var(--safety);
+  border: 1px solid color-mix(in srgb, var(--safety) 45%, transparent);
+  background: rgba(234, 88, 12, 0.06);
+  letter-spacing: 0.12em;
+}
+
+[data-theme="saxon-day"] .gold-strip {
+  height: 2px;
+  background: linear-gradient(90deg, var(--graphite), var(--safety) 40%, transparent 70%);
+}
+
+[data-theme="saxon-day"] .note {
+  border-left-color: var(--safety);
+  background: #FFF7ED;
+  color: var(--ink-soft);
+}
+
+[data-theme="saxon-day"] .foot { color: var(--muted); }
+[data-theme="saxon-day"] .foot a { color: var(--acc-github); }
+
+[data-theme="saxon-day"] .meta { border-bottom-color: var(--line); color: var(--muted); }
+[data-theme="saxon-day"] .meta b { color: var(--ink); }
+[data-theme="saxon-day"] .sub { color: var(--muted); }
+
+[data-theme="saxon-day"] .theme-row label { color: var(--safety); font-family: var(--sans); }
+[data-theme="saxon-day"] #themeSelect {
+  font-family: var(--sans);
+  border-color: var(--line-strong);
+  background-color: var(--bg-elev);
+  color: var(--ink);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--graphite) 50%),
+    linear-gradient(135deg, var(--graphite) 50%, transparent 50%);
+  background-position: calc(100% - 16px) calc(50% - 3px), calc(100% - 10px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+[data-theme="saxon-day"] #themeSelect:hover {
+  border-color: var(--safety);
+  background-color: #FFF7ED;
+}
