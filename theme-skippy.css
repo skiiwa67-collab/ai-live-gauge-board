@@ -1,0 +1,403 @@
+/* Skippy · Skippy the Magnificent — additive board theme.
+   Active when: html[data-theme="skippy"]  OR  .theme-skippy on a root/wrap.
+   Pattern mirrors theme-leonardo.css. Does not invent volts/pad/truck specs. */
+
+[data-theme="skippy"],
+.theme-skippy {
+  /* —— beer-can night field —— */
+  --bg: #06080A;
+  --bg-elev: #0C1218;
+  --bg-well: #040608;
+  --bg-card: rgba(12, 18, 24, 0.96);
+  --ink: #E8F0F4;
+  --ink-soft: #B8C6CE;
+  --muted: #7A8B94;
+
+  /* —— chrome / construction —— */
+  --line: rgba(255, 255, 255, 0.10);
+  --line-strong: rgba(255, 255, 255, 0.18);
+  --line-amber: rgba(255, 176, 32, 0.48);
+  --chrome: #9AA8B4;
+  --chrome-bright: #C8D4DE;
+  --amber: #FFB020;
+  --amber-core: #FFC14D;
+  --teal: #3EE8FF;          /* sensor-eye cyan (Skippy eyes) */
+  --cyan-eye: #3EE8FF;
+  --sepia-beer: #B8862A;
+
+  /* —— STATUS (crystal clear on dark chrome) ——
+     Board levels: ok | warn | bad | err
+     Skippy chips:  OK | DEG  | MAJ | ERR
+     Mapping documented in tokens.json → status.*  */
+  --ok: #3DFF8A;            /* OK  */
+  --ok-bright: #5CFF9E;
+  --ok-dim: rgba(61, 255, 138, 0.16);
+  --ok-glow: rgba(61, 255, 138, 0.40);
+
+  --warn: #FFC14D;          /* DEG */
+  --warn-bright: #FFD06A;
+  --warn-dim: rgba(255, 193, 77, 0.16);
+  --warn-glow: rgba(255, 193, 77, 0.42);
+
+  --bad: #FF6A1A;           /* MAJ — hotter orange than DEG */
+  --bad-bright: #FF853F;
+  --bad-dim: rgba(255, 106, 26, 0.18);
+  --bad-glow: rgba(255, 106, 26, 0.48);
+
+  --err: #FF2D3A;           /* ERR — fault red (distinct from MAJ) */
+  --err-bright: #FF5560;
+  --err-dim: rgba(255, 45, 58, 0.18);
+  --err-glow: rgba(255, 45, 58, 0.55);
+
+  --unknown: #6B7874;
+
+  /* aliases used by live board :root */
+  --green: var(--ok-bright);
+  --yellow: var(--warn-bright);
+  --red: var(--bad);        /* major outages use hot orange; ERR uses --err */
+
+  /* —— Skippy semantic aliases (optional Ada hooks) —— */
+  --skippy-ok: var(--ok);
+  --skippy-deg: var(--warn);
+  --skippy-maj: var(--bad);
+  --skippy-err: var(--err);
+  --skippy-chrome: var(--chrome);
+  --skippy-eye: var(--cyan-eye);
+  --skippy-beer: var(--amber);
+
+  /* —— provider accents (keep board kinship) —— */
+  --acc-claude: #C4B5FD;
+  --acc-openai: #5EEAD4;
+  --acc-xai: #FCA5A5;
+  --acc-github: #93C5FD;
+  --acc-cursor: #A78BFA;
+  --acc-cloudflare: #F97316;
+  --acc-notion: #A3A3A3;
+
+  /* —— gauge —— */
+  --gauge-track: rgba(154, 168, 180, 0.22);
+  --gauge-tick: rgba(232, 240, 244, 0.30);
+
+  /* —— type / radii —— */
+  --mono: "Cascadia Code", "Cascadia Mono", "SF Mono", "JetBrains Mono",
+    ui-monospace, SFMono-Regular, Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  --radius-card: 2px;
+  --radius-chip: 2px;
+}
+
+/* —— body field: dark chrome + amber core wash + cyan sensor haze —— */
+[data-theme="skippy"] body,
+.theme-skippy body {
+  font-family: var(--mono);
+  color: var(--ink);
+  background:
+    radial-gradient(55% 35% at 12% 8%, rgba(62, 232, 255, 0.09), transparent 55%),
+    radial-gradient(50% 40% at 88% 92%, rgba(255, 176, 32, 0.07), transparent 50%),
+    radial-gradient(80% 60% at 50% 50%, rgba(18, 24, 32, 0.9), transparent 70%),
+    var(--bg);
+}
+
+[data-theme="skippy"] h1,
+[data-theme="skippy"] .section h2,
+.theme-skippy h1,
+.theme-skippy .section h2 {
+  font-family: var(--mono);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 2px solid rgba(255, 176, 32, 0.55);
+  text-shadow: 0 0 18px rgba(62, 232, 255, 0.12);
+}
+
+[data-theme="skippy"] .section h2,
+.theme-skippy .section h2 {
+  color: var(--amber);
+  border-bottom-width: 1px;
+  display: inline-block;
+  padding-bottom: 2px;
+}
+
+[data-theme="skippy"] .stamp,
+.theme-skippy .stamp {
+  color: var(--amber);
+  border: 1px solid var(--line-amber);
+  background: linear-gradient(180deg, rgba(255, 176, 32, 0.10), rgba(0, 0, 0, 0.25));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 12px rgba(255, 176, 32, 0.12);
+  letter-spacing: 0.16em;
+}
+
+[data-theme="skippy"] .gold-strip,
+.theme-skippy .gold-strip {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--cyan-eye),
+    var(--amber) 28%,
+    rgba(255, 176, 32, 0.15) 55%,
+    transparent
+  );
+  box-shadow: 0 0 10px rgba(62, 232, 255, 0.25);
+}
+
+/* —— cards: brushed beer-can chrome wells —— */
+[data-theme="skippy"] .card,
+.theme-skippy .card {
+  background:
+    linear-gradient(180deg, rgba(200, 212, 222, 0.06), transparent 38%),
+    var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.40),
+    0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="skippy"] .card::before,
+.theme-skippy .card::before {
+  width: 4px;
+  background: var(--bar, var(--muted));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--bar) 55%, transparent);
+}
+
+[data-theme="skippy"] .card[data-level="ok"],
+.theme-skippy .card[data-level="ok"] {
+  --bar: var(--ok);
+}
+[data-theme="skippy"] .card[data-level="warn"],
+.theme-skippy .card[data-level="warn"] {
+  --bar: var(--warn);
+  border-color: rgba(255, 193, 77, 0.32);
+  background:
+    linear-gradient(90deg, var(--warn-dim), transparent 28%),
+    linear-gradient(180deg, rgba(200, 212, 222, 0.05), transparent 40%),
+    var(--bg-card);
+}
+[data-theme="skippy"] .card[data-level="bad"],
+.theme-skippy .card[data-level="bad"] {
+  --bar: var(--bad);
+  border-color: rgba(255, 106, 26, 0.40);
+  background:
+    linear-gradient(90deg, var(--bad-dim), transparent 28%),
+    linear-gradient(180deg, rgba(200, 212, 222, 0.05), transparent 40%),
+    var(--bg-card);
+}
+[data-theme="skippy"] .card[data-level="err"],
+.theme-skippy .card[data-level="err"] {
+  --bar: var(--err);
+  border-color: rgba(255, 45, 58, 0.42);
+  border-style: dashed;
+  background:
+    linear-gradient(90deg, var(--err-dim), transparent 28%),
+    var(--bg-card);
+}
+
+[data-theme="skippy"] .card:hover,
+.theme-skippy .card:hover {
+  border-color: var(--line-strong);
+}
+[data-theme="skippy"] .card:focus-within,
+.theme-skippy .card:focus-within {
+  outline: 1px solid var(--cyan-eye);
+  outline-offset: 2px;
+}
+
+/* —— state text (long labels) —— */
+[data-theme="skippy"] .card[data-level="ok"] .state,
+.theme-skippy .card[data-level="ok"] .state { color: var(--ok); text-shadow: 0 0 10px var(--ok-glow); }
+[data-theme="skippy"] .card[data-level="warn"] .state,
+.theme-skippy .card[data-level="warn"] .state { color: var(--warn); text-shadow: 0 0 10px var(--warn-glow); }
+[data-theme="skippy"] .card[data-level="bad"] .state,
+.theme-skippy .card[data-level="bad"] .state { color: var(--bad); text-shadow: 0 0 12px var(--bad-glow); }
+[data-theme="skippy"] .card[data-level="err"] .state,
+.theme-skippy .card[data-level="err"] .state { color: var(--err); text-shadow: 0 0 12px var(--err-glow); }
+
+/* —— status chips OK / DEG / MAJ / ERR (Ada can use .status-chip + data-status) —— */
+[data-theme="skippy"] .status-chip,
+.theme-skippy .status-chip,
+.status-chip.skippy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: var(--radius-chip);
+  border: 1px solid transparent;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="skippy"] .status-chip[data-status="OK"],
+[data-theme="skippy"] .status-chip.ok,
+.theme-skippy .status-chip[data-status="OK"],
+.theme-skippy .status-chip.ok {
+  color: var(--ok);
+  background: rgba(4, 28, 16, 0.92);
+  border-color: rgba(61, 255, 138, 0.55);
+  box-shadow: 0 0 12px var(--ok-glow);
+}
+[data-theme="skippy"] .status-chip[data-status="DEG"],
+[data-theme="skippy"] .status-chip.deg,
+.theme-skippy .status-chip[data-status="DEG"],
+.theme-skippy .status-chip.deg {
+  color: var(--warn);
+  background: rgba(36, 24, 4, 0.94);
+  border-color: rgba(255, 193, 77, 0.60);
+  box-shadow: 0 0 12px var(--warn-glow);
+}
+[data-theme="skippy"] .status-chip[data-status="MAJ"],
+[data-theme="skippy"] .status-chip.maj,
+.theme-skippy .status-chip[data-status="MAJ"],
+.theme-skippy .status-chip.maj {
+  color: var(--bad);
+  background: rgba(40, 14, 4, 0.94);
+  border-color: rgba(255, 106, 26, 0.62);
+  box-shadow: 0 0 14px var(--bad-glow);
+}
+[data-theme="skippy"] .status-chip[data-status="ERR"],
+[data-theme="skippy"] .status-chip.err,
+.theme-skippy .status-chip[data-status="ERR"],
+.theme-skippy .status-chip.err {
+  color: var(--err);
+  background: rgba(42, 6, 10, 0.95);
+  border-color: rgba(255, 45, 58, 0.65);
+  box-shadow: 0 0 14px var(--err-glow);
+}
+
+[data-theme="skippy"] .status-chip::before,
+.theme-skippy .status-chip::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* provider name accents */
+[data-theme="skippy"] .theme-claude .name,
+.theme-skippy .theme-claude .name { color: var(--acc-claude); }
+[data-theme="skippy"] .theme-openai .name,
+.theme-skippy .theme-openai .name { color: var(--acc-openai); }
+[data-theme="skippy"] .theme-xai .name,
+.theme-skippy .theme-xai .name { color: var(--acc-xai); }
+[data-theme="skippy"] .theme-github .name,
+.theme-skippy .theme-github .name { color: var(--acc-github); }
+[data-theme="skippy"] .theme-cursor .name,
+.theme-skippy .theme-cursor .name { color: var(--acc-cursor); }
+[data-theme="skippy"] .theme-cloudflare .name,
+.theme-skippy .theme-cloudflare .name { color: var(--acc-cloudflare); }
+[data-theme="skippy"] .theme-notion .name,
+.theme-skippy .theme-notion .name { color: var(--acc-notion); }
+
+[data-theme="skippy"] .comps,
+.theme-skippy .comps { border-top-color: var(--line); }
+[data-theme="skippy"] .comp .ok,
+.theme-skippy .comp .ok { color: var(--ok); }
+[data-theme="skippy"] .comp .warn,
+.theme-skippy .comp .warn { color: var(--warn); }
+[data-theme="skippy"] .comp .bad,
+.theme-skippy .comp .bad { color: var(--bad); }
+[data-theme="skippy"] .comp .err,
+.theme-skippy .comp .err { color: var(--err); }
+
+/* buttons — cyan sensor chrome */
+[data-theme="skippy"] a.btn,
+[data-theme="skippy"] button.btn,
+.theme-skippy a.btn,
+.theme-skippy button.btn {
+  border: 1px solid rgba(62, 232, 255, 0.32);
+  background: #071016;
+  color: var(--cyan-eye);
+  opacity: 0.9;
+  border-radius: 2px;
+}
+[data-theme="skippy"] a.btn:hover,
+[data-theme="skippy"] button.btn:hover,
+.theme-skippy a.btn:hover,
+.theme-skippy button.btn:hover {
+  opacity: 1;
+  background: rgba(62, 232, 255, 0.08);
+  border-color: rgba(62, 232, 255, 0.60);
+  box-shadow: 0 0 12px rgba(62, 232, 255, 0.20);
+}
+[data-theme="skippy"] a.btn:focus-visible,
+[data-theme="skippy"] button.btn:focus-visible,
+.theme-skippy a.btn:focus-visible,
+.theme-skippy button.btn:focus-visible {
+  outline: 2px solid var(--cyan-eye);
+  outline-offset: 2px;
+}
+
+/* timeline */
+[data-theme="skippy"] .timeline,
+.theme-skippy .timeline {
+  background: var(--bg-well);
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(62, 232, 255, 0.04);
+}
+[data-theme="skippy"] .tl-lane,
+.theme-skippy .tl-lane {
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  border-radius: 0;
+}
+[data-theme="skippy"] .tl-hours,
+.theme-skippy .tl-hours { color: var(--muted); }
+
+[data-theme="skippy"] .ev,
+.theme-skippy .ev {
+  border-color: var(--line);
+  background: rgba(0, 0, 0, 0.28);
+}
+[data-theme="skippy"] .ev.active,
+.theme-skippy .ev.active {
+  border-left: 3px solid var(--bad);
+  background: linear-gradient(90deg, var(--bad-dim), transparent 40%), rgba(0, 0, 0, 0.28);
+}
+[data-theme="skippy"] .badge.resolved,
+.theme-skippy .badge.resolved { color: var(--ok); }
+[data-theme="skippy"] .badge.active,
+.theme-skippy .badge.active { color: var(--err); }
+
+[data-theme="skippy"] .note,
+.theme-skippy .note {
+  border-left: 2px solid var(--amber);
+  background: #0a0906;
+  color: #c9cfcc;
+}
+[data-theme="skippy"] .note::before,
+.theme-skippy .note::before {
+  /* subtle elder aside — no kangaroo */
+  content: none;
+}
+
+[data-theme="skippy"] .meta,
+.theme-skippy .meta { border-bottom-color: var(--line); color: var(--muted); }
+[data-theme="skippy"] .meta b,
+.theme-skippy .meta b { color: var(--ink); }
+[data-theme="skippy"] .sub,
+.theme-skippy .sub { color: var(--muted); }
+[data-theme="skippy"] .foot,
+.theme-skippy .foot { color: #5d6a66; }
+[data-theme="skippy"] .foot a,
+.theme-skippy .foot a { color: var(--cyan-eye); }
+
+/* sensor-eye pulse — loading / active outage only */
+[data-theme="skippy"] .pulse,
+.theme-skippy .pulse {
+  animation: skippy-eye 1.2s ease-in-out infinite;
+}
+@keyframes skippy-eye {
+  0%, 100% { opacity: 0.45; filter: drop-shadow(0 0 0 transparent); }
+  50% { opacity: 1; filter: drop-shadow(0 0 6px var(--cyan-eye)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="skippy"] .pulse,
+  .theme-skippy .pulse { animation: none; }
+}
