@@ -1,69 +1,71 @@
-/* Ignition · Saxon — additive only. Active when html[data-theme="saxon"]. */
+/* Blueprint · Saxon — REPLACE Ignition. Active when html[data-theme="saxon"].
+   Soft-FAIL Ignition: too close to Skippy void+neon. This is cyanotype. */
 [data-theme="saxon"], .theme-saxon {
-  /* —— ignition pit —— */
-  --bg: #05070A;
-  --bg-elev: #0A0E14;
-  --bg-well: #070B10;
-  --bg-card: rgba(12, 18, 24, 0.96);
-  --ink: #F3F6F4;
-  --ink-soft: #C9D0CC;
-  --muted: #8B9894;
+  /* —— cyanotype field —— */
+  --bg: #0B3A6E;
+  --bg-elev: #0E4580;
+  --bg-well: #082F5A;
+  --bg-card: #0F4A88;
+  --ink: #F2F8FF;
+  --ink-soft: #D6E8FF;
+  --muted: #A8C4E0;
+  --print: #D6E8FF;
 
-  /* —— chrome: cyan telemetry + burn —— */
-  --cyan: #00D4FF;
-  --burn: #FF6B00;
-  --line: rgba(255, 255, 255, 0.10);
-  --line-strong: rgba(255, 255, 255, 0.18);
-  --line-amber: rgba(0, 212, 255, 0.45);
-  --line-ink: #E8EEF0;
+  /* —— construction ink (white on blue — NOT Skippy neon chrome) —— */
+  --line: rgba(242, 248, 255, 0.22);
+  --line-strong: rgba(242, 248, 255, 0.40);
+  --line-amber: rgba(242, 248, 255, 0.50);
+  --line-ink: #F2F8FF;
 
-  /* —— STATUS INKS THAT SCREAM (on void) —— */
-  --ok: #3DFF8A;
-  --ok-bright: #5CFF9C;
-  --ok-dim: rgba(61, 255, 138, 0.16);
-  --ok-glow: rgba(61, 255, 138, 0.40);
+  /* —— STATUS ON PRUSSIAN (scream) —— */
+  --ok: #7CFFB2;
+  --ok-bright: #9AFFC6;
+  --ok-dim: rgba(124, 255, 178, 0.16);
+  --ok-glow: rgba(124, 255, 178, 0.35);
 
-  --warn: #FFD84D;
-  --warn-bright: #FFE066;
-  --warn-dim: rgba(255, 216, 77, 0.16);
+  --warn: #FFE066;
+  --warn-bright: #FFEB8A;
+  --warn-dim: rgba(255, 224, 102, 0.16);
 
-  --bad: #FF3B3B;
-  --bad-bright: #FF5555;
-  --bad-dim: rgba(255, 59, 59, 0.18);
-  --bad-glow: rgba(255, 59, 59, 0.50);
+  --bad: #FF4D55;
+  --bad-bright: #FF6B72;
+  --bad-dim: rgba(255, 77, 85, 0.18);
+  --bad-glow: rgba(255, 77, 85, 0.40);
 
-  --err: #FF8A3D;
-  --err-dim: rgba(255, 138, 61, 0.16);
-  --unknown: #6B7874;
+  --err: #FFB347;
+  --err-dim: rgba(255, 179, 71, 0.16);
+  --unknown: #7A96B0;
 
   --green: var(--ok);
   --yellow: var(--warn);
   --red: var(--bad);
-  --amber: var(--burn);
-  --teal: var(--cyan);
+  --amber: #FFB347;
+  --teal: var(--print);
 
-  /* —— provider accents (readable on void) —— */
-  --acc-claude: #C4B5FD;
-  --acc-openai: #5EEAD4;
-  --acc-xai: #FCA5A5;
-  --acc-github: #93C5FD;
-  --acc-cursor: #A78BFA;
-  --acc-cloudflare: #F97316;
-  --acc-notion: #A3A3A3;
+  /* —— provider accents (readable on blue) —— */
+  --acc-claude: #E0D4FF;
+  --acc-openai: #9AF0E0;
+  --acc-xai: #FFB0B0;
+  --acc-github: #B8D8FF;
+  --acc-cursor: #D4C4FF;
+  --acc-cloudflare: #FFB070;
+  --acc-notion: #D0D8E0;
 
   /* —— gauge —— */
-  --gauge-track: rgba(139, 152, 148, 0.22);
-  --gauge-tick: rgba(243, 246, 244, 0.32);
-  --gauge-circle: rgba(0, 212, 255, 0.25);
+  --gauge-track: rgba(242, 248, 255, 0.18);
+  --gauge-tick: rgba(242, 248, 255, 0.45);
+  --gauge-circle: rgba(242, 248, 255, 0.30);
 }
 
 [data-theme="saxon"] body {
   font-family: var(--mono);
   color: var(--ink);
   background:
-    radial-gradient(70% 40% at 50% -10%, rgba(0, 212, 255, 0.07), transparent 55%),
-    radial-gradient(50% 30% at 80% 100%, rgba(255, 107, 0, 0.05), transparent 50%),
+    linear-gradient(rgba(242, 248, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242, 248, 255, 0.06) 1px, transparent 1px),
+    radial-gradient(70% 45% at 50% -8%, rgba(214, 232, 255, 0.12), transparent 55%),
     var(--bg);
+  background-size: 24px 24px, 24px 24px, auto, auto;
 }
 
 [data-theme="saxon"] h1,
@@ -73,11 +75,11 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink);
-  border-bottom: 2px solid rgba(0, 212, 255, 0.65);
+  border-bottom: 1.5px solid var(--print);
 }
 
 [data-theme="saxon"] .section h2 {
-  color: var(--cyan);
+  color: var(--print);
   border-bottom-width: 1px;
   display: inline-block;
   padding-bottom: 2px;
@@ -91,39 +93,39 @@
 }
 
 [data-theme="saxon"] .card {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 40%), var(--bg-card);
-  border: 1px solid var(--line);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 45%), var(--bg-card);
+  border: 1px solid var(--line-strong);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  border-radius: 1px;
 }
 
 [data-theme="saxon"] .card::before {
-  width: 4px;
+  width: 5px;
   background: var(--bar);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--bar) 55%, transparent);
+  box-shadow: none; /* delete neon glow soup — print ink, not Skippy eyes */
 }
 
 [data-theme="saxon"] .card[data-level="ok"] { --bar: var(--ok); }
 [data-theme="saxon"] .card[data-level="warn"] {
   --bar: var(--warn);
-  border-color: rgba(255, 216, 77, 0.32);
-  background: linear-gradient(90deg, var(--warn-dim), transparent 28%), var(--bg-card);
+  border-color: color-mix(in srgb, var(--warn) 45%, var(--line-strong));
+  background: linear-gradient(90deg, var(--warn-dim), transparent 30%), var(--bg-card);
 }
 [data-theme="saxon"] .card[data-level="bad"] {
   --bar: var(--bad);
-  border-color: rgba(255, 59, 59, 0.40);
-  background: linear-gradient(90deg, var(--bad-dim), transparent 28%), var(--bg-card);
+  border-color: color-mix(in srgb, var(--bad) 50%, var(--line-strong));
+  background: linear-gradient(90deg, var(--bad-dim), transparent 30%), var(--bg-card);
 }
 [data-theme="saxon"] .card[data-level="err"] {
   --bar: var(--err);
-  border-color: rgba(255, 138, 61, 0.40);
   border-style: dashed;
-  background: linear-gradient(90deg, var(--err-dim), transparent 28%), var(--bg-card);
+  border-color: color-mix(in srgb, var(--err) 50%, var(--line-strong));
+  background: linear-gradient(90deg, var(--err-dim), transparent 30%), var(--bg-card);
 }
 
-[data-theme="saxon"] .card:hover { border-color: var(--line-strong); }
+[data-theme="saxon"] .card:hover { border-color: var(--print); }
 [data-theme="saxon"] .card:focus-within {
-  outline: 2px solid var(--cyan);
+  outline: 2px solid var(--print);
   outline-offset: 2px;
 }
 
@@ -140,20 +142,20 @@
 [data-theme="saxon"] .theme-cloudflare .name { color: var(--acc-cloudflare); }
 [data-theme="saxon"] .theme-notion .name { color: var(--acc-notion); }
 
-[data-theme="saxon"] .comps { border-top-color: rgba(255, 255, 255, 0.07); }
+[data-theme="saxon"] .comps { border-top-color: var(--line); }
 [data-theme="saxon"] .comp .ok { color: var(--ok); }
 [data-theme="saxon"] .comp .bad { color: var(--bad); }
 [data-theme="saxon"] .comp .warn { color: var(--warn); }
 
 [data-theme="saxon"] .timeline {
   background: var(--bg-well);
-  border: 1px solid var(--line);
-  border-radius: 2px;
+  border: 1px solid var(--line-strong);
+  border-radius: 1px;
 }
 
 [data-theme="saxon"] .tl-lane {
-  background: rgba(255, 255, 255, 0.04);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  background: rgba(242, 248, 255, 0.06);
+  box-shadow: inset 0 0 0 1px var(--line);
   border-radius: 0;
   height: 12px;
 }
@@ -165,8 +167,8 @@
     90deg,
     transparent,
     transparent calc(100% / 48 - 1px),
-    rgba(0, 212, 255, 0.04) calc(100% / 48 - 1px),
-    rgba(0, 212, 255, 0.04) calc(100% / 48)
+    rgba(242, 248, 255, 0.10) calc(100% / 48 - 1px),
+    rgba(242, 248, 255, 0.10) calc(100% / 48)
   );
   border-bottom-color: var(--line-strong);
 }
@@ -174,77 +176,75 @@
 [data-theme="saxon"] .tl-hours { color: var(--muted); }
 
 [data-theme="saxon"] .ev {
-  border-color: rgba(255, 255, 255, 0.06);
-  background: rgba(0, 0, 0, 0.28);
+  border-color: var(--line);
+  background: rgba(0, 20, 50, 0.28);
 }
 [data-theme="saxon"] .ev.active {
   border-left: 3px solid var(--bad);
-  background: linear-gradient(90deg, var(--bad-dim), transparent 40%), rgba(0, 0, 0, 0.28);
+  background: linear-gradient(90deg, var(--bad-dim), transparent 40%), rgba(0, 20, 50, 0.28);
 }
-[data-theme="saxon"] .badge { border-color: rgba(255, 255, 255, 0.15); }
+[data-theme="saxon"] .badge { border-color: var(--line); }
 [data-theme="saxon"] .badge.resolved { color: var(--ok); }
 [data-theme="saxon"] .badge.active { color: var(--bad); }
 
 [data-theme="saxon"] a.btn,
 [data-theme="saxon"] button.btn {
-  border: 1px solid rgba(0, 212, 255, 0.30);
-  background: #071016;
-  color: var(--cyan);
-  opacity: 0.9;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-elev);
+  color: var(--print);
+  opacity: 0.95;
 }
 [data-theme="saxon"] a.btn:hover,
 [data-theme="saxon"] button.btn:hover {
-  background: rgba(0, 212, 255, 0.08);
-  border-color: rgba(0, 212, 255, 0.60);
+  background: color-mix(in srgb, var(--print) 12%, var(--bg-elev));
+  border-color: var(--print);
   opacity: 1;
 }
 
 [data-theme="saxon"] .stamp {
-  color: var(--burn);
-  border: 1px solid rgba(255, 107, 0, 0.45);
-  background: rgba(255, 107, 0, 0.06);
+  color: var(--print);
+  border: 1px solid var(--line-strong);
+  background: rgba(242, 248, 255, 0.06);
   letter-spacing: 0.16em;
 }
 
 [data-theme="saxon"] .gold-strip {
   height: 2px;
-  background: linear-gradient(90deg, var(--cyan), var(--burn) 55%, transparent);
+  background: linear-gradient(90deg, var(--print), transparent 60%);
 }
 
 [data-theme="saxon"] .note {
-  border-left-color: var(--burn);
-  background: #0a0906;
-  color: #c9cfcc;
+  border-left-color: var(--print);
+  background: rgba(0, 20, 50, 0.35);
+  color: var(--ink-soft);
 }
 
-[data-theme="saxon"] .foot { color: #5d6a66; }
-[data-theme="saxon"] .foot a { color: var(--cyan); }
+[data-theme="saxon"] .foot { color: var(--muted); }
+[data-theme="saxon"] .foot a { color: var(--print); }
 
 [data-theme="saxon"] .meta { border-bottom-color: var(--line); color: var(--muted); }
 [data-theme="saxon"] .meta b { color: var(--ink); }
 [data-theme="saxon"] .sub { color: var(--muted); }
 
-[data-theme="saxon"] .theme-row label { color: var(--burn); }
+[data-theme="saxon"] .theme-row label { color: var(--print); }
 [data-theme="saxon"] #themeSelect {
-  border-color: rgba(0, 212, 255, 0.45);
+  border-color: var(--line-strong);
   background-color: var(--bg-elev);
   color: var(--ink);
   background-image:
-    linear-gradient(45deg, transparent 50%, var(--cyan) 50%),
-    linear-gradient(135deg, var(--cyan) 50%, transparent 50%);
+    linear-gradient(45deg, transparent 50%, var(--print) 50%),
+    linear-gradient(135deg, var(--print) 50%, transparent 50%);
   background-position: calc(100% - 16px) calc(50% - 3px), calc(100% - 10px) calc(50% - 3px);
   background-size: 6px 6px, 6px 6px;
   background-repeat: no-repeat;
 }
 [data-theme="saxon"] #themeSelect:hover {
-  border-color: var(--cyan);
-  background-color: rgba(0, 212, 255, 0.08);
+  border-color: var(--print);
+  background-color: rgba(242, 248, 255, 0.08);
 }
 
 @media (max-width: 640px) {
   [data-theme="saxon"] body {
-    background:
-      radial-gradient(70% 40% at 50% -10%, rgba(0, 212, 255, 0.07), transparent 55%),
-      var(--bg);
+    background-size: 20px 20px, 20px 20px, auto, auto;
   }
 }
