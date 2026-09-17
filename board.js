@@ -440,6 +440,7 @@
   function applyTheme(name){
     const theme=resolveTheme(name);
     if(theme==='night') document.documentElement.removeAttribute('data-theme');
+    else if(theme==='saxon-day') document.documentElement.setAttribute('data-theme', 'saxon-day');
     else document.documentElement.setAttribute('data-theme', theme);
     try{ localStorage.setItem('gauge-theme', theme); }catch(e){}
     const stamp=document.getElementById('stamp');
