@@ -1,6 +1,23 @@
 (function(){
-  const GREEN='#3DFF8A', YELLOW='#FFD84D', RED='#FF3B3B', TEAL='#3EE0D4';
-  const TRACK='rgba(139,152,148,.22)', TICK='rgba(243,246,244,.28)';
+  let GREEN='#3DFF8A', YELLOW='#FFD84D', RED='#FF3B3B', TEAL='#3EE0D4';
+  let TRACK='rgba(139,152,148,.22)', TICK='rgba(243,246,244,.28)';
+  const NIGHT_ACC={claude:'#C4B5FD',openai:'#5EEAD4',xai:'#FCA5A5',github:'#93C5FD',cursor:'#A78BFA',cloudflare:'#F97316',notion:'#A3A3A3'};
+  const LEO_ACC={claude:'#5B4B9A',openai:'#1A7A6E',xai:'#9A3B3B',github:'#2F5F9A',cursor:'#5A3D9A',cloudflare:'#C45C12',notion:'#4A453F'};
+  function themeColors(){
+    const t=document.documentElement.getAttribute('data-theme');
+    if(t==='leonardo'){
+      return {GREEN:'#0D9A4C',YELLOW:'#D48400',RED:'#D32F2F',TEAL:'#1F6F6A',TRACK:'rgba(45,32,20,0.18)',TICK:'rgba(31,24,18,0.45)'};
+    }
+    return {GREEN:'#3DFF8A',YELLOW:'#FFD84D',RED:'#FF3B3B',TEAL:'#3EE0D4',TRACK:'rgba(139,152,148,.22)',TICK:'rgba(243,246,244,.28)'};
+  }
+  function refreshThemeConsts(){
+    const c=themeColors();
+    GREEN=c.GREEN; YELLOW=c.YELLOW; RED=c.RED; TEAL=c.TEAL; TRACK=c.TRACK; TICK=c.TICK;
+    const leo=document.documentElement.getAttribute('data-theme')==='leonardo';
+    const acc=leo?LEO_ACC:NIGHT_ACC;
+    services.forEach(s=>{ if(acc[s.id]) s.color=acc[s.id]; });
+  }
+  function isLeonardo(){ return document.documentElement.getAttribute('data-theme')==='leonardo'; }
   const HOURS=48;
   const now=()=>Date.now();
   const windowStart=()=>now()-HOURS*3600*1000;
@@ -71,10 +88,73 @@
     ctx.restore();
   }
 
+  function hatch(ctx,x,y,w,h,step,color){
+    ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=1; ctx.beginPath();
+    for(let i=-h;i<w+h;i+=step){ ctx.moveTo(x+i,y); ctx.lineTo(x+i+h,y+h); }
+    ctx.stroke(); ctx.restore();
+  }
+
+  function drawLeonardoGauge(ctx,W,H,info){
+    const cx=W/2, cy=H*0.69, r=Math.min(W,H)*0.42;
+    const start=Math.PI*1.15, end=Math.PI*-0.15;
+    const ang=t=>start+(end-start)*t;
+    const level=Math.max(.02,Math.min(1,info.level));
+    const CIRCLE='rgba(45,32,20,0.35)';
+    // light hatch α≤0.08 — no motifs on Leonardo
+    hatch(ctx, cx-r-8, cy-r*0.35, (r+8)*2, r*1.15, 7, 'rgba(45,32,20,0.055)');
+    // Vitruvian outer + inner
+    ctx.strokeStyle=CIRCLE; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(cx,cy,r+12,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx,cy,r*0.72,0,Math.PI*2); ctx.stroke();
+    ctx.strokeStyle='rgba(45,32,20,0.12)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(cx-(r+12),cy); ctx.lineTo(cx+(r+12),cy);
+    ctx.moveTo(cx,cy-(r+12)); ctx.lineTo(cx,cy+(r+4)); ctx.stroke();
+    // segmented status arc — bright ok/warn/bad only
+    const segs=22;
+    ctx.lineCap='butt';
+    for(let i=0;i<segs;i++){
+      const t0=i/segs, t1=(i+.72)/segs;
+      const lit=t0<level;
+      const tip=lit && t0>level-1/segs;
+      ctx.beginPath();
+      ctx.arc(cx,cy,r,ang(t0),ang(t1),false);
+      ctx.strokeStyle=lit?info.color:TRACK;
+      ctx.lineWidth=tip?13:11;
+      ctx.stroke();
+      if(i%4===0){
+        const a=ang(t0);
+        ctx.strokeStyle=TICK; ctx.lineWidth=1.5;
+        ctx.beginPath();
+        ctx.moveTo(cx+Math.cos(a)*(r+8),cy+Math.sin(a)*(r+8));
+        ctx.lineTo(cx+Math.cos(a)*(r+16),cy+Math.sin(a)*(r+16));
+        ctx.stroke();
+      }
+    }
+    // needle: sepia shaft + status tip
+    const a=ang(level);
+    ctx.strokeStyle='#2C2118'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+Math.cos(a)*(r-26),cy+Math.sin(a)*(r-26)); ctx.stroke();
+    ctx.fillStyle=info.color;
+    ctx.beginPath();
+    const tipX=cx+Math.cos(a)*(r-18), tipY=cy+Math.sin(a)*(r-18);
+    const px=-Math.sin(a), py=Math.cos(a);
+    ctx.moveTo(tipX,tipY);
+    ctx.lineTo(tipX-Math.cos(a)*10+px*4, tipY-Math.sin(a)*10+py*4);
+    ctx.lineTo(tipX-Math.cos(a)*10-px*4, tipY-Math.sin(a)*10-py*4);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#FBF6EA'; ctx.beginPath(); ctx.arc(cx,cy,5,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=TEAL; ctx.lineWidth=1.5; ctx.stroke();
+    const short=info.short||shortWord(info.label);
+    const ff=getComputedStyle(document.body).fontFamily;
+    ctx.fillStyle=info.color; ctx.font='700 20px '+ff; ctx.textAlign='center'; ctx.fillText(short,cx,cy+34);
+    ctx.fillStyle='#6B5A48'; ctx.font='10px '+ff; ctx.fillText(Math.round(level*100)+'%',cx,cy+50);
+  }
+
   function drawGauge(canvas,s,info){
     const dpr=Math.min(2,window.devicePixelRatio||1),W=360,H=220;
     canvas.width=W*dpr; canvas.height=H*dpr;
     const ctx=canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+    if(isLeonardo()){ drawLeonardoGauge(ctx,W,H,info); return; }
     const cx=180,cy=152,r=92;
     const start=Math.PI*1.15, end=Math.PI*-0.15;
     const ang=t=>start+(end-start)*t;
@@ -248,10 +328,46 @@
     document.getElementById('updated').textContent=new Date().toLocaleString();
     document.getElementById('footMsg').textContent='browser fetches · auto 30s';
   }
+  function applyTheme(name){
+    const leo=name==='leonardo';
+    if(leo) document.documentElement.setAttribute('data-theme','leonardo');
+    else document.documentElement.removeAttribute('data-theme');
+    try{ localStorage.setItem('gauge-theme', leo?'leonardo':'night'); }catch(e){}
+    const stamp=document.getElementById('stamp');
+    if(stamp) stamp.textContent=leo?'r9·FOLIO':'r9';
+    const btn=document.getElementById('themeToggle');
+    if(btn) btn.textContent=leo?'NIGHT':'FOLIO';
+    const meta=document.querySelector('meta[name="theme-color"]');
+    if(meta) meta.setAttribute('content', leo?'#F3E6CF':'#050708');
+    refreshThemeConsts();
+  }
+
+  function initTheme(){
+    let theme='night';
+    try{
+      const q=new URLSearchParams(location.search).get('theme');
+      if(q==='leonardo'||q==='folio') theme='leonardo';
+      else if(q==='night'||q==='r8'||q==='dark') theme='night';
+      else {
+        const stored=localStorage.getItem('gauge-theme');
+        if(stored==='leonardo') theme='leonardo';
+      }
+    }catch(e){}
+    applyTheme(theme);
+  }
+
   document.addEventListener('click',ev=>{
+    const tog=ev.target.closest('#themeToggle');
+    if(tog){
+      const next=isLeonardo()?'night':'leonardo';
+      applyTheme(next);
+      refreshAll();
+      return;
+    }
     const t=ev.target.closest('[data-refresh]'); if(!t) return;
     const id=t.getAttribute('data-refresh'); const s=services.find(x=>x.id===id);
     if(s) refreshOne(s).then(renderTimeline);
   });
+  initTheme();
   refreshAll(); setInterval(refreshAll,30000);
 })();
