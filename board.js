@@ -423,9 +423,9 @@
     document.getElementById('updated').textContent=new Date().toLocaleString();
     document.getElementById('footMsg').textContent='browser fetches · auto 30s';
   }
-  const LIVE_THEMES=new Set(['night','leonardo','skippy','spacex-elon','claude','cursor','github','saxon']);
+  const LIVE_THEMES=new Set(['night','leonardo','skippy','spacex-elon','claude','cursor','github']);
   const THEME_ALIASES={folio:'leonardo',r8:'night',dark:'night',spacex:'spacex-elon',elon:'spacex-elon'};
-  const THEME_STAMP={night:'r12',leonardo:'r12·FOLIO',skippy:'r12·SKIPPY','spacex-elon':'r12·ELON',claude:'r12·CLAUDE',cursor:'r12·CURSOR',github:'r12·GITHUB',saxon:'r12·SAXON'};
+  const THEME_STAMP={night:'r13',leonardo:'r13·FOLIO',skippy:'r13·SKIPPY','spacex-elon':'r13·ELON',claude:'r13·CLAUDE',cursor:'r13·CURSOR',github:'r13·GITHUB',saxon:'r13·SAXON'};
   const THEME_META={night:'#050708',leonardo:'#F3E6CF',skippy:'#06080A','spacex-elon':'#05070A',claude:'#F4EBE3',cursor:'#0B0D12',github:'#0D1117',saxon:'#05070A'};
   function resolveTheme(raw){
     let t=String(raw||'night').toLowerCase().trim();
@@ -439,7 +439,7 @@
     else document.documentElement.setAttribute('data-theme', theme);
     try{ localStorage.setItem('gauge-theme', theme); }catch(e){}
     const stamp=document.getElementById('stamp');
-    if(stamp) stamp.textContent=THEME_STAMP[theme]||'r12';
+    if(stamp) stamp.textContent=THEME_STAMP[theme]||'r13';
     const sel=document.getElementById('themeSelect');
     if(sel){
       const opt=[...sel.options].find(o=>o.value===theme && !o.disabled);
