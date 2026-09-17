@@ -136,13 +136,14 @@ a.btn:focus-visible,button.btn:focus-visible{outline:2px solid var(--teal);outli
 }
 @media (prefers-reduced-motion:reduce){.pulse{animation:none}}
 </style>
+<link rel="stylesheet" href="./theme-leonardo.css">
 </head>
 <body>
 <div class="wrap">
   <div class="top"><div>
     <h1>AI Live Gauge Board</h1>
     <p class="sub">Live gauges + shared 48-hour outage timeline. Official feeds only. Overlapping bars = simultaneous outage.</p>
-  </div><div class="stamp">r8</div></div>
+  </div><div class="stamp" id="stamp">r9</div></div>
   <div class="meta">
     <div>Updated: <b id="updated">—</b></div>
     <div>Auto-refresh: <b>30s</b></div>
@@ -162,10 +163,10 @@ a.btn:focus-visible,button.btn:focus-visible{outline:2px solid var(--teal);outli
   </div>
   <div class="note"><b>Rule.</b> Agents spin &gt; ~2 min → open this board. Red gauge / stacked bars = wait.</div>
   <div class="foot">
-    <div>SKIIWA · AI LIVE GAUGE BOARD</div>
+    <div>SKIIWA · AI LIVE GAUGE BOARD · <button type="button" class="btn" id="themeToggle" title="Toggle Folio / Night">FOLIO</button></div>
     <div><a href="https://github.com/skiiwa67-collab/ai-live-gauge-board" target="_blank" rel="noopener">repo</a> · <span id="footMsg">loading…</span></div>
   </div>
 </div>
-<script src="./board.js?v=8"></script>
+<script src="./board.js?v=9"></script>
 </body>
 </html>
