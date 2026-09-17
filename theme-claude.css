@@ -1,0 +1,188 @@
+/* Claude · Da Vinci — additive. Active when html[data-theme="claude"]. */
+[data-theme="claude"] {
+  --bg: #F4EBE3;
+  --bg-elev: #FBF6F1;
+  --bg-well: #E8DDD4;
+  --bg-card: #FDFAF7;
+  --ink: #1C1410;
+  --ink-soft: #3A2E28;
+  --muted: #6E5C52;
+
+  --line: rgba(60, 40, 30, 0.16);
+  --line-strong: rgba(60, 40, 30, 0.32);
+  --clay: #C4785A;
+  --lavender: #8B7EC8;
+  --lavender-soft: #B8AED9;
+  --focus: #7A6BB5;
+
+  --ok: #0B7A42;
+  --ok-bright: #0C9A50;
+  --ok-dim: rgba(11, 122, 66, 0.14);
+  --warn: #C46A00;
+  --warn-bright: #E07A00;
+  --warn-dim: rgba(196, 106, 0, 0.15);
+  --bad: #C41828;
+  --bad-bright: #E02030;
+  --bad-dim: rgba(196, 24, 40, 0.14);
+  --unknown: #5A524C;
+  --err: #8A5200;
+
+  --green: var(--ok-bright);
+  --yellow: var(--warn-bright);
+  --red: var(--bad-bright);
+  --amber: var(--clay);
+  --teal: var(--focus);
+
+  --acc-claude: #7A6BB5;
+  --acc-openai: #1A7A6E;
+  --acc-xai: #A04040;
+  --acc-github: #2F5F9A;
+  --acc-cursor: #5A3D9A;
+  --acc-cloudflare: #C45C12;
+  --acc-notion: #4A453F;
+
+  --gauge-track: rgba(60, 40, 30, 0.16);
+  --gauge-tick: rgba(28, 20, 16, 0.40);
+  --gauge-ring: rgba(139, 126, 200, 0.35);
+
+  --sans: "Iowan Old Style", Palatino, "Book Antiqua", Georgia, serif;
+  --mono: "Cascadia Code", "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+
+[data-theme="claude"] body {
+  font-family: var(--mono);
+  color: var(--ink);
+  background:
+    radial-gradient(70% 45% at 50% -8%, rgba(184, 174, 217, 0.14), transparent 50%),
+    radial-gradient(50% 40% at 100% 100%, rgba(196, 120, 90, 0.08), transparent 45%),
+    var(--bg);
+}
+
+[data-theme="claude"] h1,
+[data-theme="claude"] .section h2 {
+  font-family: var(--sans);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1.5px solid var(--lavender);
+}
+
+[data-theme="claude"] .section h2 {
+  display: inline-block;
+  padding-bottom: 2px;
+  border-bottom-width: 1px;
+}
+
+[data-theme="claude"] .stamp {
+  color: var(--lavender);
+  border: 1px solid color-mix(in srgb, var(--lavender) 45%, var(--line-strong));
+  letter-spacing: 0.16em;
+  background: rgba(139, 126, 200, 0.08);
+}
+
+[data-theme="claude"] .gold-strip {
+  height: 2px;
+  background: linear-gradient(90deg, var(--lavender), var(--clay) 40%, transparent 70%);
+}
+
+[data-theme="claude"] .card {
+  background: var(--bg-card);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 1px 2px rgba(60, 40, 30, 0.06);
+}
+
+[data-theme="claude"] .card::before {
+  width: 5px;
+  background: var(--bar, var(--muted));
+  border-radius: 4px 0 0 4px;
+}
+
+[data-theme="claude"] .card[data-level="ok"] { --bar: var(--ok); }
+[data-theme="claude"] .card[data-level="warn"] {
+  --bar: var(--warn);
+  border-color: color-mix(in srgb, var(--warn) 45%, var(--line-strong));
+  background: linear-gradient(90deg, var(--warn-dim), transparent 30%), var(--bg-card);
+}
+[data-theme="claude"] .card[data-level="bad"] {
+  --bar: var(--bad);
+  border-color: color-mix(in srgb, var(--bad) 50%, var(--line-strong));
+  background: linear-gradient(90deg, var(--bad-dim), transparent 30%), var(--bg-card);
+}
+[data-theme="claude"] .card[data-level="err"] {
+  --bar: var(--err);
+  border-style: dashed;
+}
+
+[data-theme="claude"] .card[data-level="ok"] .state { color: var(--ok); }
+[data-theme="claude"] .card[data-level="warn"] .state,
+[data-theme="claude"] .card[data-level="err"] .state { color: var(--warn); }
+[data-theme="claude"] .card[data-level="bad"] .state { color: var(--bad); }
+
+[data-theme="claude"] .card:focus-within {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+[data-theme="claude"] .theme-claude .name { color: var(--acc-claude); }
+[data-theme="claude"] .theme-openai .name { color: var(--acc-openai); }
+[data-theme="claude"] .theme-xai .name { color: var(--acc-xai); }
+[data-theme="claude"] .theme-github .name { color: var(--acc-github); }
+[data-theme="claude"] .theme-cursor .name { color: var(--acc-cursor); }
+[data-theme="claude"] .theme-cloudflare .name { color: var(--acc-cloudflare); }
+[data-theme="claude"] .theme-notion .name { color: var(--acc-notion); }
+
+[data-theme="claude"] .comps { border-top-color: var(--line); }
+[data-theme="claude"] .comp .ok { color: var(--ok); }
+[data-theme="claude"] .comp .warn { color: var(--warn); }
+[data-theme="claude"] .comp .bad { color: var(--bad); }
+
+[data-theme="claude"] a.btn,
+[data-theme="claude"] button.btn {
+  border: 1px solid var(--line-strong);
+  background: var(--bg-elev);
+  color: var(--focus);
+  border-radius: 4px;
+  opacity: 0.92;
+}
+[data-theme="claude"] a.btn:hover,
+[data-theme="claude"] button.btn:hover {
+  opacity: 1;
+  border-color: var(--lavender);
+  background: color-mix(in srgb, var(--lavender) 10%, var(--bg-elev));
+}
+
+[data-theme="claude"] .timeline {
+  background: var(--bg-well);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+[data-theme="claude"] .tl-lane {
+  background: rgba(60, 40, 30, 0.06);
+  border-radius: 0;
+}
+[data-theme="claude"] .tl-hours { color: var(--muted); }
+
+[data-theme="claude"] .ev {
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.40);
+}
+[data-theme="claude"] .ev.active {
+  border-left: 3px solid var(--bad);
+  background: linear-gradient(90deg, var(--bad-dim), transparent 40%), rgba(255, 255, 255, 0.40);
+}
+[data-theme="claude"] .badge.resolved { color: var(--ok); }
+[data-theme="claude"] .badge.active { color: var(--bad); }
+
+[data-theme="claude"] .note {
+  border-left-color: var(--clay);
+  background: rgba(255, 255, 255, 0.45);
+  color: var(--ink-soft);
+}
+[data-theme="claude"] .meta { border-bottom-color: var(--line); color: var(--muted); }
+[data-theme="claude"] .meta b { color: var(--ink); }
+[data-theme="claude"] .sub { color: var(--muted); }
+[data-theme="claude"] .foot { color: var(--muted); }
+[data-theme="claude"] .foot a { color: var(--focus); }
