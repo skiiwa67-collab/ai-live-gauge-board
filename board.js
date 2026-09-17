@@ -23,6 +23,9 @@
     if(t==='github'){
       return {GREEN:'#3FB950',YELLOW:'#E3B341',RED:'#F85149',TEAL:'#2F81F7',TRACK:'rgba(110,118,129,0.35)',TICK:'rgba(230,237,243,0.35)'};
     }
+    if(t==='saxon'){
+      return {GREEN:'#3DFF8A',YELLOW:'#FFD84D',RED:'#FF3B3B',TEAL:'#00D4FF',TRACK:'rgba(139,152,148,.22)',TICK:'rgba(243,246,244,.28)'};
+    }
     return {GREEN:'#3DFF8A',YELLOW:'#FFD84D',RED:'#FF3B3B',TEAL:'#3EE0D4',TRACK:'rgba(139,152,148,.22)',TICK:'rgba(243,246,244,.28)'};
   }
   const SKIPPY_ACC={claude:'#C4B5FD',openai:'#5EEAD4',xai:'#FCA5A5',github:'#93C5FD',cursor:'#A78BFA',cloudflare:'#F97316',notion:'#A3A3A3'};
@@ -30,14 +33,16 @@
   const CLAUDE_ACC={claude:'#7A6BB5',openai:'#1A7A6E',xai:'#A04040',github:'#2F5F9A',cursor:'#5A3D9A',cloudflare:'#C45C12',notion:'#4A453F'};
   const CURSOR_ACC={claude:'#A78BFA',openai:'#2DD4BF',xai:'#FB7185',github:'#60A5FA',cursor:'#8B7CF7',cloudflare:'#FB923C',notion:'#CBD5E1'};
   const GITHUB_ACC={claude:'#A371F7',openai:'#3FB950',xai:'#F85149',github:'#2F81F7',cursor:'#A371F7',cloudflare:'#F0883E',notion:'#C9D1D9'};
+  const SAXON_ACC={claude:'#C4B5FD',openai:'#5EEAD4',xai:'#FCA5A5',github:'#93C5FD',cursor:'#A78BFA',cloudflare:'#F97316',notion:'#A3A3A3'};
   function refreshThemeConsts(){
     const c=themeColors();
     GREEN=c.GREEN; YELLOW=c.YELLOW; RED=c.RED; TEAL=c.TEAL; TRACK=c.TRACK; TICK=c.TICK;
     const t=document.documentElement.getAttribute('data-theme');
-    const acc=t==='leonardo'?LEO_ACC:t==='claude'?CLAUDE_ACC:t==='cursor'?CURSOR_ACC:t==='github'?GITHUB_ACC:t==='spacex-elon'?SPACEX_ACC:t==='skippy'?SKIPPY_ACC:NIGHT_ACC;
+    const acc=t==='leonardo'?LEO_ACC:t==='claude'?CLAUDE_ACC:t==='cursor'?CURSOR_ACC:t==='github'?GITHUB_ACC:t==='spacex-elon'?SPACEX_ACC:t==='skippy'?SKIPPY_ACC:t==='saxon'?SAXON_ACC:NIGHT_ACC;
     services.forEach(s=>{ if(acc[s.id]) s.color=acc[s.id]; });
   }
   function isLeonardo(){ return document.documentElement.getAttribute('data-theme')==='leonardo'; }
+  function isSaxon(){ return document.documentElement.getAttribute('data-theme')==='saxon'; }
   function currentTheme(){ return document.documentElement.getAttribute('data-theme')||'night'; }
   const HOURS=48;
   const now=()=>Date.now();
@@ -418,10 +423,10 @@
     document.getElementById('updated').textContent=new Date().toLocaleString();
     document.getElementById('footMsg').textContent='browser fetches · auto 30s';
   }
-  const LIVE_THEMES=new Set(['night','leonardo','skippy','spacex-elon','claude','cursor','github']);
+  const LIVE_THEMES=new Set(['night','leonardo','skippy','spacex-elon','claude','cursor','github','saxon']);
   const THEME_ALIASES={folio:'leonardo',r8:'night',dark:'night',spacex:'spacex-elon',elon:'spacex-elon'};
-  const THEME_STAMP={night:'r11',leonardo:'r11·FOLIO',skippy:'r11·SKIPPY','spacex-elon':'r11·ELON',claude:'r11·CLAUDE',cursor:'r11·CURSOR',github:'r11·GITHUB'};
-  const THEME_META={night:'#050708',leonardo:'#F3E6CF',skippy:'#06080A','spacex-elon':'#05070A',claude:'#F4EBE3',cursor:'#0B0D12',github:'#0D1117'};
+  const THEME_STAMP={night:'r12',leonardo:'r12·FOLIO',skippy:'r12·SKIPPY','spacex-elon':'r12·ELON',claude:'r12·CLAUDE',cursor:'r12·CURSOR',github:'r12·GITHUB',saxon:'r12·SAXON'};
+  const THEME_META={night:'#050708',leonardo:'#F3E6CF',skippy:'#06080A','spacex-elon':'#05070A',claude:'#F4EBE3',cursor:'#0B0D12',github:'#0D1117',saxon:'#05070A'};
   function resolveTheme(raw){
     let t=String(raw||'night').toLowerCase().trim();
     if(THEME_ALIASES[t]) t=THEME_ALIASES[t];
@@ -434,7 +439,7 @@
     else document.documentElement.setAttribute('data-theme', theme);
     try{ localStorage.setItem('gauge-theme', theme); }catch(e){}
     const stamp=document.getElementById('stamp');
-    if(stamp) stamp.textContent=THEME_STAMP[theme]||'r11';
+    if(stamp) stamp.textContent=THEME_STAMP[theme]||'r12';
     const sel=document.getElementById('themeSelect');
     if(sel){
       const opt=[...sel.options].find(o=>o.value===theme && !o.disabled);
