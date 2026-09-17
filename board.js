@@ -429,7 +429,7 @@
   }
   const LIVE_THEMES=new Set(['night','leonardo','skippy','spacex-elon','claude','cursor','github','saxon','saxon-day']);
   const THEME_ALIASES={folio:'leonardo',r8:'night',dark:'night',spacex:'spacex-elon',elon:'spacex-elon'};
-  const THEME_STAMP={night:'r13',leonardo:'r13·FOLIO',skippy:'r14·SKIPPY','spacex-elon':'r13·ELON',claude:'r13·CLAUDE',cursor:'r13·CURSOR',github:'r13·GITHUB',saxon:'r13·BP','saxon-day':'r13·DAY'};
+  const THEME_STAMP={night:'r14',leonardo:'r14·FOLIO',skippy:'r14·SKIPPY','spacex-elon':'r14·ELON',claude:'r14·CLAUDE',cursor:'r14·CURSOR',github:'r14·GITHUB',saxon:'r14·BP','saxon-day':'r14·DAY'};
   const THEME_META={night:'#050708',leonardo:'#F3E6CF',skippy:'#06080A','spacex-elon':'#05070A',claude:'#F4EBE3',cursor:'#0B0D12',github:'#0D1117',saxon:'#0B3A6E','saxon-day':'#F7F8FA'};
   function resolveTheme(raw){
     let t=String(raw||'night').toLowerCase().trim();
@@ -444,7 +444,7 @@
     else document.documentElement.setAttribute('data-theme', theme);
     try{ localStorage.setItem('gauge-theme', theme); }catch(e){}
     const stamp=document.getElementById('stamp');
-    if(stamp) stamp.textContent=THEME_STAMP[theme]||'r13';
+    if(stamp) stamp.textContent=THEME_STAMP[theme]||'r14';
     const sel=document.getElementById('themeSelect');
     if(sel){
       const opt=[...sel.options].find(o=>o.value===theme && !o.disabled);
