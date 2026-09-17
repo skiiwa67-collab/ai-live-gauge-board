@@ -1,25 +1,54 @@
 (function(){
   const GREEN='#3DFF8A', YELLOW='#FFD84D', RED='#FF3B3B', TEAL='#3EE0D4';
+  const TRACK='rgba(139,152,148,.22)', TICK='rgba(243,246,244,.28)';
   const HOURS=48;
   const now=()=>Date.now();
   const windowStart=()=>now()-HOURS*3600*1000;
+  const reduceMotion=()=>window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const services=[
-    {id:'claude',name:'CLAUDE',theme:'claude',themeLabel:'INK / PURPLE',official:'https://status.claude.com/',summary:'https://status.claude.com/api/v2/summary.json',incidents:'https://status.claude.com/api/v2/incidents.json',kind:'statuspage',color:'#C4B5FD'},
-    {id:'openai',name:'OPENAI / CHATGPT',theme:'openai',themeLabel:'NEON LAB',official:'https://status.openai.com/',summary:'https://status.openai.com/api/v2/summary.json',incidents:'https://status.openai.com/api/v2/incidents.json',kind:'statuspage',color:'#5EEAD4'},
-    {id:'xai',name:'xAI / GROK',theme:'xai',themeLabel:'ROCKET / SPACE',official:'https://status.x.ai/',summary:'https://status.x.ai/',incidents:null,kind:'xai-html',color:'#FCA5A5'},
-    {id:'github',name:'GITHUB',theme:'github',themeLabel:'COMMIT GRAPH',official:'https://www.githubstatus.com/',summary:'https://www.githubstatus.com/api/v2/summary.json',incidents:'https://www.githubstatus.com/api/v2/incidents.json',kind:'statuspage',color:'#93C5FD'},
-    {id:'cursor',name:'CURSOR',theme:'cursor',themeLabel:'IDE / AGENTS',official:'https://status.cursor.com/',summary:'https://status.cursor.com/api/v2/summary.json',incidents:'https://status.cursor.com/api/v2/incidents.json',kind:'statuspage',color:'#FBBF24'},
-    {id:'cloudflare',name:'CLOUDFLARE',theme:'cloudflare',themeLabel:'EDGE / CDN',official:'https://www.cloudflarestatus.com/',summary:'https://www.cloudflarestatus.com/api/v2/summary.json',incidents:'https://www.cloudflarestatus.com/api/v2/incidents.json',kind:'statuspage',color:'#F97316'},
-    {id:'notion',name:'NOTION',theme:'notion',themeLabel:'DOCS / WIKI',official:'https://www.notion-status.com/',summary:'https://www.notion-status.com/api/v2/summary.json',incidents:'https://www.notion-status.com/api/v2/incidents.json',kind:'statuspage',color:'#A3A3A3'}
+    {id:'claude',name:'CLAUDE',theme:'claude',official:'https://status.claude.com/',summary:'https://status.claude.com/api/v2/summary.json',incidents:'https://status.claude.com/api/v2/incidents.json',kind:'statuspage',color:'#C4B5FD'},
+    {id:'openai',name:'OPENAI / CHATGPT',theme:'openai',official:'https://status.openai.com/',summary:'https://status.openai.com/api/v2/summary.json',incidents:'https://status.openai.com/api/v2/incidents.json',kind:'statuspage',color:'#5EEAD4'},
+    {id:'xai',name:'xAI / GROK',theme:'xai',official:'https://status.x.ai/',summary:'https://status.x.ai/',incidents:null,kind:'xai-html',color:'#FCA5A5'},
+    {id:'github',name:'GITHUB',theme:'github',official:'https://www.githubstatus.com/',summary:'https://www.githubstatus.com/api/v2/summary.json',incidents:'https://www.githubstatus.com/api/v2/incidents.json',kind:'statuspage',color:'#93C5FD'},
+    {id:'cursor',name:'CURSOR',theme:'cursor',official:'https://status.cursor.com/',summary:'https://status.cursor.com/api/v2/summary.json',incidents:'https://status.cursor.com/api/v2/incidents.json',kind:'statuspage',color:'#A78BFA'},
+    {id:'cloudflare',name:'CLOUDFLARE',theme:'cloudflare',official:'https://www.cloudflarestatus.com/',summary:'https://www.cloudflarestatus.com/api/v2/summary.json',incidents:'https://www.cloudflarestatus.com/api/v2/incidents.json',kind:'statuspage',color:'#F97316'},
+    {id:'notion',name:'NOTION',theme:'notion',official:'https://www.notion-status.com/',summary:'https://www.notion-status.com/api/v2/summary.json',incidents:'https://www.notion-status.com/api/v2/incidents.json',kind:'statuspage',color:'#A3A3A3'}
   ];
   const grid=document.getElementById('grid');
   const state={};
+  document.documentElement.style.setProperty('--lane-count', String(services.length));
+  const pc=document.getElementById('provCount'); if(pc) pc.textContent=String(services.length);
+
   services.forEach(s=>{
     const el=document.createElement('section');
     el.className='card theme-'+s.theme;
-    el.innerHTML=`<div class="head"><div class="name">${s.name}</div><div class="state pulse" id="${s.id}-state">LOADING</div></div><p class="theme-tag">${s.themeLabel}</p><p class="desc" id="${s.id}-desc">Contacting feed…</p><div class="gauge-wrap"><canvas id="${s.id}-g" width="360" height="220"></canvas></div><div class="comps" id="${s.id}-comps"></div><div class="actions"><a class="btn" href="${s.official}" target="_blank" rel="noopener">OPEN STATUS</a><button class="btn" type="button" data-refresh="${s.id}">REFRESH</button></div>`;
+    el.dataset.level='err';
+    el.title=s.name;
+    el.innerHTML=`<div class="head"><div class="name">${s.name}</div><div class="state pulse" id="${s.id}-state">LOADING</div></div><p class="desc" id="${s.id}-desc">Contacting feed…</p><div class="gauge-wrap"><canvas id="${s.id}-g" width="360" height="220"></canvas></div><div class="comps" id="${s.id}-comps"></div><div class="actions"><a class="btn" href="${s.official}" target="_blank" rel="noopener">OPEN STATUS</a><button class="btn" type="button" data-refresh="${s.id}">REFRESH</button></div>`;
     grid.appendChild(el); state[s.id]={incidents:[]};
   });
+
+  function shortWord(label){
+    const L=(label||'').toUpperCase();
+    if(L.includes('OPERATIONAL')||L==='OK') return 'OK';
+    if(L.includes('DEGRADED')||L==='DEG') return 'DEG';
+    if(L.includes('MAJOR')||L==='MAJ') return 'MAJ';
+    if(L.includes('CRITICAL')||L==='CRIT') return 'CRIT';
+    if(L.includes('INCIDENT')) return 'INC';
+    if(L.includes('OUTAGE')) return 'OUT';
+    if(L.includes('ERROR')||L==='ERR'||L.includes('UNKNOWN')||L.includes('FEED')) return 'ERR';
+    if(L.includes('LOAD')||L==='…') return '…';
+    return (L.replace(/[^A-Z]/g,'').slice(0,4)||'—');
+  }
+
+  function dataLevelFrom(info){
+    const L=(info.label||'').toUpperCase();
+    if(info.level>=.92 && (L.includes('OPERATIONAL')||L==='OK')) return 'ok';
+    if(L.includes('ERROR')||L.includes('UNKNOWN')||L.includes('FEED')) return 'err';
+    if(info.level<=.35 || L.includes('MAJOR')||L.includes('CRITICAL')||L.includes('OUTAGE')) return 'bad';
+    if(info.level<.9 || L.includes('DEGRADED')||L.includes('INCIDENT')) return 'warn';
+    return 'ok';
+  }
 
   function levelFromIndicator(ind){
     ind=(ind||'none').toLowerCase();
@@ -30,25 +59,65 @@
     return {level:.4,label:String(ind).toUpperCase(),color:YELLOW};
   }
 
+  function drawMotif(ctx,s){
+    ctx.save(); ctx.globalAlpha=.2;
+    if(s.theme==='xai'){ for(let i=0;i<12;i++){ ctx.fillStyle='#F3F6F4'; ctx.fillRect((i*53)%120,(i*17)%56,1.5,1.5);} ctx.fillStyle='#FCA5A5'; ctx.beginPath(); ctx.moveTo(36,22); ctx.lineTo(42,36); ctx.lineTo(30,36); ctx.closePath(); ctx.fill(); }
+    else if(s.theme==='claude'){ ctx.strokeStyle='#C4B5FD'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(28,30); ctx.quadraticCurveTo(60,8,90,28); ctx.stroke(); }
+    else if(s.theme==='openai'){ ctx.strokeStyle='#5EEAD4'; ctx.lineWidth=1; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.arc(42,28,6+i*7,0,Math.PI*2); ctx.stroke(); } }
+    else if(s.theme==='cursor'){ ctx.strokeStyle='#A78BFA'; ctx.lineWidth=1.5; ctx.strokeRect(30,16,26,26); ctx.beginPath(); ctx.moveTo(34,42); ctx.lineTo(43,30); ctx.lineTo(52,42); ctx.stroke(); }
+    else if(s.theme==='cloudflare'){ ctx.strokeStyle='#F97316'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(28,36); ctx.quadraticCurveTo(48,14,78,34); ctx.stroke(); }
+    else if(s.theme==='notion'){ ctx.strokeStyle='#A3A3A3'; ctx.lineWidth=1.5; ctx.strokeRect(34,14,26,32); ctx.beginPath(); ctx.moveTo(40,22); ctx.lineTo(54,22); ctx.moveTo(40,30); ctx.lineTo(54,30); ctx.stroke(); }
+    else { for(let i=0;i<8;i++){ const h=6+(i*13)%18; ctx.fillStyle='#93C5FD'; ctx.fillRect(28+i*8,46-h,5,h);} }
+    ctx.restore();
+  }
+
   function drawGauge(canvas,s,info){
     const dpr=Math.min(2,window.devicePixelRatio||1),W=360,H=220;
     canvas.width=W*dpr; canvas.height=H*dpr;
     const ctx=canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
-    const cx=180,cy=145,r=86,start=Math.PI*1.1,end=Math.PI*-0.1,ang=t=>start+(end-start)*t;
+    const cx=180,cy=152,r=92;
+    const start=Math.PI*1.15, end=Math.PI*-0.15;
+    const ang=t=>start+(end-start)*t;
     const level=Math.max(.02,Math.min(1,info.level));
-    // light theme accents only
-    if(s.theme==='xai'){ for(let i=0;i<18;i++){ ctx.fillStyle='rgba(243,246,244,.2)'; ctx.fillRect((i*53)%W,(i*17)%70,1.5,1.5);} ctx.fillStyle=info.color; ctx.beginPath(); ctx.moveTo(36,28); ctx.lineTo(42,44); ctx.lineTo(30,44); ctx.closePath(); ctx.fill(); }
-    else if(s.theme==='claude'){ ctx.strokeStyle='rgba(196,181,253,.35)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(28,36); ctx.quadraticCurveTo(60,10,90,34); ctx.stroke(); }
-    else if(s.theme==='openai'){ ctx.strokeStyle='rgba(94,234,212,.28)'; ctx.lineWidth=1; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.arc(42,34,6+i*7,0,Math.PI*2); ctx.stroke(); } }
-    else if(s.theme==='cursor'){ ctx.strokeStyle='rgba(251,191,36,.35)'; ctx.lineWidth=1.5; ctx.strokeRect(30,22,28,28); ctx.beginPath(); ctx.moveTo(34,50); ctx.lineTo(44,36); ctx.lineTo(54,50); ctx.stroke(); }
-    else if(s.theme==='cloudflare'){ ctx.strokeStyle='rgba(249,115,22,.4)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(28,44); ctx.quadraticCurveTo(48,18,78,40); ctx.quadraticCurveTo(58,48,40,42); ctx.stroke(); }
-    else if(s.theme==='notion'){ ctx.strokeStyle='rgba(163,163,163,.4)'; ctx.lineWidth=1.5; ctx.strokeRect(34,20,28,34); ctx.beginPath(); ctx.moveTo(40,28); ctx.lineTo(56,28); ctx.moveTo(40,36); ctx.lineTo(56,36); ctx.moveTo(40,44); ctx.lineTo(52,44); ctx.stroke(); }
-    else { for(let i=0;i<8;i++){ const h=6+(i*13)%18; ctx.fillStyle='rgba(147,197,253,.28)'; ctx.fillRect(28+i*8,52-h,5,h);} }
-    ctx.lineWidth=11; ctx.lineCap='round'; ctx.strokeStyle='rgba(139,152,148,.18)'; ctx.beginPath(); ctx.arc(cx,cy,r,start,end,false); ctx.stroke();
-    ctx.strokeStyle=info.color; ctx.shadowColor=info.color; ctx.shadowBlur=10; ctx.beginPath(); ctx.arc(cx,cy,r,start,ang(level),false); ctx.stroke(); ctx.shadowBlur=0;
-    const a=ang(level); ctx.strokeStyle=TEAL; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+Math.cos(a)*(r-24),cy+Math.sin(a)*(r-24)); ctx.stroke();
-    ctx.fillStyle='#0b1114'; ctx.beginPath(); ctx.arc(cx,cy,5,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=TEAL; ctx.lineWidth=1.5; ctx.stroke();
-    ctx.fillStyle=info.color; ctx.font='700 13px '+getComputedStyle(document.body).fontFamily; ctx.textAlign='center'; ctx.fillText(info.label,cx,cy+34);
+    const segs=22;
+    drawMotif(ctx,s);
+    ctx.lineCap='butt';
+    for(let i=0;i<segs;i++){
+      const t0=i/segs, t1=(i+.72)/segs;
+      const lit=t0<level;
+      const tip=lit && t0>level-1/segs;
+      ctx.beginPath();
+      ctx.arc(cx,cy,r,ang(t0),ang(t1),false);
+      ctx.strokeStyle=lit?info.color:TRACK;
+      ctx.lineWidth=tip?13:11;
+      if(tip && !reduceMotion()){ ctx.shadowColor=info.color; ctx.shadowBlur=8; }
+      ctx.stroke(); ctx.shadowBlur=0;
+      if(i%4===0){
+        const a=ang(t0);
+        ctx.strokeStyle=TICK; ctx.lineWidth=1.5;
+        ctx.beginPath();
+        ctx.moveTo(cx+Math.cos(a)*(r+10),cy+Math.sin(a)*(r+10));
+        ctx.lineTo(cx+Math.cos(a)*(r+16),cy+Math.sin(a)*(r+16));
+        ctx.stroke();
+      }
+    }
+    const a=ang(level);
+    ctx.strokeStyle=TEAL; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+Math.cos(a)*(r-26),cy+Math.sin(a)*(r-26)); ctx.stroke();
+    ctx.fillStyle=info.color;
+    ctx.beginPath();
+    const tipX=cx+Math.cos(a)*(r-18), tipY=cy+Math.sin(a)*(r-18);
+    const px=-Math.sin(a), py=Math.cos(a);
+    ctx.moveTo(tipX,tipY);
+    ctx.lineTo(tipX-Math.cos(a)*10+px*4, tipY-Math.sin(a)*10+py*4);
+    ctx.lineTo(tipX-Math.cos(a)*10-px*4, tipY-Math.sin(a)*10-py*4);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#0b1114'; ctx.beginPath(); ctx.arc(cx,cy,5,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=TEAL; ctx.lineWidth=1.5; ctx.stroke();
+    const short=info.short||shortWord(info.label);
+    const ff=getComputedStyle(document.body).fontFamily;
+    ctx.fillStyle=info.color; ctx.font='700 20px '+ff; ctx.textAlign='center'; ctx.fillText(short,cx,cy+34);
+    ctx.fillStyle='#8B9894'; ctx.font='10px '+ff; ctx.fillText(Math.round(level*100)+'%',cx,cy+50);
   }
 
   function setCard(id,info,comps){
@@ -58,9 +127,19 @@
     const canvas=document.getElementById(id+'-g');
     const box=document.getElementById(id+'-comps');
     const card=canvas.closest('.card');
-    stateEl.classList.remove('pulse'); stateEl.textContent=info.label; stateEl.style.color=info.color; card.style.setProperty('--bar',info.color); desc.textContent=info.detail||'';
+    info.short=info.short||shortWord(info.label);
+    const dl=dataLevelFrom(info);
+    card.dataset.level=dl;
+    card.style.setProperty('--bar', info.color);
+    stateEl.classList.remove('pulse');
+    stateEl.textContent=info.label;
+    stateEl.style.color=info.color;
+    desc.textContent=info.detail||'';
     drawGauge(canvas,s,info);
-    box.innerHTML=(comps||[]).slice(0,6).map(c=>{const cls=c.ok==='bad'?'bad':(c.ok==='warn'?'warn':'ok'); return `<div class="comp"><span>${c.name}</span><span class="${cls}">${c.status}</span></div>`;}).join('') || `<div class="comp"><span>No component list</span><span class="ok">—</span></div>`;
+    box.innerHTML=(comps||[]).slice(0,5).map(c=>{
+      const cls=c.ok==='bad'?'bad':(c.ok==='warn'?'warn':'ok');
+      return `<div class="comp"><span>${c.name}</span><span class="${cls}">${c.status}</span></div>`;
+    }).join('') || `<div class="comp"><span>No components</span><span class="ok">—</span></div>`;
   }
 
   function parseIncidents(serviceId,j){
@@ -82,7 +161,7 @@
     if(!sumRes.ok) throw new Error('summary HTTP '+sumRes.status);
     const sum=await sumRes.json();
     const info=levelFromIndicator(sum.status&&sum.status.indicator); info.detail=(sum.status&&sum.status.description)||'';
-    const comps=(sum.components||[]).filter(c=>!c.group).slice(0,6).map(c=>({name:c.name,status:c.status,ok:c.status==='operational'?'ok':(c.status==='degraded_performance'||c.status==='partial_outage'?'warn':'bad')}));
+    const comps=(sum.components||[]).filter(c=>!c.group).slice(0,5).map(c=>({name:c.name,status:c.status,ok:c.status==='operational'?'ok':(c.status==='degraded_performance'||c.status==='partial_outage'?'warn':'bad')}));
     let incidents=[];
     if(incRes.ok){ const inc=await incRes.json(); incidents=parseIncidents(s.id,inc); const open=incidents.filter(i=>i.active); if(open.length){ info.detail=open[0].name+' — '+open[0].status; if(info.level>.5){info.level=.4;info.label='INCIDENT';info.color=YELLOW;} } }
     state[s.id].incidents=incidents; setCard(s.id,info,comps);
@@ -99,7 +178,6 @@
   async function loadXai(s){
     const r=await fetch(s.summary+'?_='+Date.now(),{cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status);
     const html=await r.text();
-    // Prefer RSC payload markers: "children":"Grok (iOS)" ... later "children":"available|outage"
     const names=['Grok (iOS)','Grok (Android)','Grok (Web)','Grok Build','Grok (Office/Workspace Plugins)','Single Sign-On','API (us-east-1.api.x.ai)','API (us-west-2.api.x.ai)','API (eu-west-1.api.x.ai)','API Console','Docs','xAI Website','Grok in X'];
     const comps=[];
     names.forEach(name=>{
@@ -108,7 +186,6 @@
       const m=html.match(re);
       if(m){ const st=m[1].toLowerCase(); comps.push({name,status:st,ok:classifyXaiStatus(st)}); }
     });
-    // fallback plain text pairs
     if(!comps.length){
       const clean=html.replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,'\n');
       const lines=clean.split(/\n+/).map(x=>x.trim()).filter(Boolean);
@@ -127,24 +204,26 @@
     else info={level:1,label:'OPERATIONAL',color:GREEN,detail:'All parsed xAI services available.'};
     const incidents=[];
     if(bad){ incidents.push({service:'xai',name:'One or more xAI services marked outage on status.x.ai',status:'ongoing',start:now(),end:now(),active:true,liveOnly:true}); }
-    state.xai.incidents=incidents; setCard('xai',info,comps);
+    state.xai.incidents=incidents; setCard('xai',info,comps.slice(0,5));
   }
 
   function renderTimeline(){
     const axis=document.getElementById('axis'), hours=document.getElementById('hours'), events=document.getElementById('events');
     const start=windowStart(), end=now(), span=end-start;
-    axis.innerHTML=services.map((s,idx)=>`<div class="tl-lane" style="top:${14+idx*18}px" id="lane-${s.id}"><div class="tl-lane-label" style="color:${s.color}">${s.id.toUpperCase()}</div></div>`).join('');
+    axis.innerHTML=services.map((s,idx)=>`<div class="tl-lane" style="top:${14+idx*22}px" id="lane-${s.id}"><div class="tl-lane-label" style="color:${s.color}">${s.id.toUpperCase()}</div></div>`).join('');
     const all=[]; services.forEach(s=>(state[s.id].incidents||[]).forEach(i=>all.push(i))); all.sort((a,b)=>b.start-a.start);
     all.forEach(i=>{
       if(i.liveOnly) return;
       const lane=document.getElementById('lane-'+i.service); if(!lane) return;
       const left=Math.max(0,(i.start-start)/span), right=Math.min(1,(i.end-start)/span), width=Math.max(.008,right-left);
       const seg=document.createElement('div'); seg.className='seg'; const color=services.find(x=>x.id===i.service).color;
-      seg.style.left=(left*100)+'%'; seg.style.width=(width*100)+'%'; seg.style.background=color; seg.style.opacity=i.active?.95:.55; lane.appendChild(seg);
+      seg.style.left=(left*100)+'%'; seg.style.width=(width*100)+'%'; seg.style.background=color; seg.style.opacity=i.active?.95:.55;
+      seg.style.boxShadow='0 0 6px '+color+'66'; lane.appendChild(seg);
     });
     all.filter(i=>i.liveOnly).forEach(i=>{
       const lane=document.getElementById('lane-'+i.service); if(!lane) return;
-      const seg=document.createElement('div'); seg.className='seg'; seg.style.left='97.5%'; seg.style.width='2.5%'; seg.style.background=services.find(x=>x.id===i.service).color; lane.appendChild(seg);
+      const color=services.find(x=>x.id===i.service).color;
+      const seg=document.createElement('div'); seg.className='seg'; seg.style.left='97.5%'; seg.style.width='2.5%'; seg.style.background=color; seg.style.boxShadow='0 0 6px '+color+'66'; lane.appendChild(seg);
     });
     const marks=[]; for(let h=0;h<=48;h+=12){ const t=new Date(start+h*3600*1000); marks.push(t.toLocaleString(undefined,{month:'short',day:'numeric',hour:'numeric'})); }
     hours.innerHTML=marks.map(m=>`<span>${m}</span>`).join('');
@@ -152,13 +231,13 @@
       const svc=services.find(x=>x.id===i.service);
       const when=i.liveOnly?'NOW':new Date(i.start).toLocaleString();
       const badge=i.active?'<span class="badge active">ACTIVE</span>':'<span class="badge resolved">RESOLVED</span>';
-      return `<div class="ev"><div class="when">${when}</div><div class="svc ${i.service}">${svc.name.split(' ')[0]}</div><div class="title">${i.name}${badge}</div></div>`;
-    }).join('') : `<div class="ev"><div class="when">—</div><div class="svc">ALL</div><div class="title">No incidents in the last 48 hours from available official feeds.</div></div>`;
+      return `<div class="ev${i.active?' active':''}"><div class="when">${when}</div><div class="svc ${i.service}">${svc.name.split(' ')[0]}</div><div class="title">${i.name}${badge}</div></div>`;
+    }).join('') : `<div class="ev"><div class="when">—</div><div class="svc">ALL</div><div class="title">Quiet 48h — no official incidents.</div></div>`;
   }
 
   async function refreshOne(s){
     const stateEl=document.getElementById(s.id+'-state');
-    stateEl.classList.add('pulse'); stateEl.textContent='REFRESH…';
+    stateEl.classList.add('pulse'); stateEl.textContent='LOADING';
     try{ if(s.kind==='statuspage') await loadStatuspage(s); else await loadXai(s); }
     catch(e){ state[s.id].incidents=state[s.id].incidents||[]; setCard(s.id,{level:.35,label:'FEED ERROR',color:YELLOW,detail:String(e.message||e)},[]); }
   }
