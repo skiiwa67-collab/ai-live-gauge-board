@@ -8,16 +8,37 @@
     if(t==='leonardo'){
       return {GREEN:'#0D9A4C',YELLOW:'#D48400',RED:'#D32F2F',TEAL:'#1F6F6A',TRACK:'rgba(45,32,20,0.18)',TICK:'rgba(31,24,18,0.45)'};
     }
+    if(t==='skippy'){
+      return {GREEN:'#3DFF8A',YELLOW:'#FFC14D',RED:'#FF6A1A',TEAL:'#3EE8FF',TRACK:'rgba(154,168,180,.22)',TICK:'rgba(232,240,244,.30)'};
+    }
+    if(t==='spacex-elon'){
+      return {GREEN:'#3DFF8A',YELLOW:'#FFB020',RED:'#FF2D2D',TEAL:'#FFFFFF',TRACK:'rgba(255,255,255,.14)',TICK:'rgba(245,245,245,.35)'};
+    }
+    if(t==='claude'){
+      return {GREEN:'#0C9A50',YELLOW:'#E07A00',RED:'#E02030',TEAL:'#7A6BB5',TRACK:'rgba(60,40,30,0.16)',TICK:'rgba(28,20,16,0.40)'};
+    }
+    if(t==='cursor'){
+      return {GREEN:'#3DFF8A',YELLOW:'#FFD84D',RED:'#FF3B3B',TEAL:'#8B7CF7',TRACK:'rgba(140,160,220,0.14)',TICK:'rgba(232,236,244,0.28)'};
+    }
+    if(t==='github'){
+      return {GREEN:'#3FB950',YELLOW:'#E3B341',RED:'#F85149',TEAL:'#2F81F7',TRACK:'rgba(110,118,129,0.35)',TICK:'rgba(230,237,243,0.35)'};
+    }
     return {GREEN:'#3DFF8A',YELLOW:'#FFD84D',RED:'#FF3B3B',TEAL:'#3EE0D4',TRACK:'rgba(139,152,148,.22)',TICK:'rgba(243,246,244,.28)'};
   }
+  const SKIPPY_ACC={claude:'#C4B5FD',openai:'#5EEAD4',xai:'#FCA5A5',github:'#93C5FD',cursor:'#A78BFA',cloudflare:'#F97316',notion:'#A3A3A3'};
+  const SPACEX_ACC={claude:'#C4B5FD',openai:'#5EEAD4',xai:'#E4572E',github:'#93C5FD',cursor:'#A78BFA',cloudflare:'#F97316',notion:'#A3A3A3'};
+  const CLAUDE_ACC={claude:'#7A6BB5',openai:'#1A7A6E',xai:'#A04040',github:'#2F5F9A',cursor:'#5A3D9A',cloudflare:'#C45C12',notion:'#4A453F'};
+  const CURSOR_ACC={claude:'#A78BFA',openai:'#2DD4BF',xai:'#FB7185',github:'#60A5FA',cursor:'#8B7CF7',cloudflare:'#FB923C',notion:'#CBD5E1'};
+  const GITHUB_ACC={claude:'#A371F7',openai:'#3FB950',xai:'#F85149',github:'#2F81F7',cursor:'#A371F7',cloudflare:'#F0883E',notion:'#C9D1D9'};
   function refreshThemeConsts(){
     const c=themeColors();
     GREEN=c.GREEN; YELLOW=c.YELLOW; RED=c.RED; TEAL=c.TEAL; TRACK=c.TRACK; TICK=c.TICK;
-    const leo=document.documentElement.getAttribute('data-theme')==='leonardo';
-    const acc=leo?LEO_ACC:NIGHT_ACC;
+    const t=document.documentElement.getAttribute('data-theme');
+    const acc=t==='leonardo'?LEO_ACC:t==='claude'?CLAUDE_ACC:t==='cursor'?CURSOR_ACC:t==='github'?GITHUB_ACC:t==='spacex-elon'?SPACEX_ACC:t==='skippy'?SKIPPY_ACC:NIGHT_ACC;
     services.forEach(s=>{ if(acc[s.id]) s.color=acc[s.id]; });
   }
   function isLeonardo(){ return document.documentElement.getAttribute('data-theme')==='leonardo'; }
+  function currentTheme(){ return document.documentElement.getAttribute('data-theme')||'night'; }
   const HOURS=48;
   const now=()=>Date.now();
   const windowStart=()=>now()-HOURS*3600*1000;
@@ -216,7 +237,7 @@
     stateEl.style.color=info.color;
     desc.textContent=info.detail||'';
     drawGauge(canvas,s,info);
-    box.innerHTML=(comps||[]).slice(0,5).map(c=>{
+    box.innerHTML=(comps||[]).slice(0,8).map(c=>{
       const cls=c.ok==='bad'?'bad':(c.ok==='warn'?'warn':'ok');
       return `<div class="comp"><span>${c.name}</span><span class="${cls}">${c.status}</span></div>`;
     }).join('') || `<div class="comp"><span>No components</span><span class="ok">—</span></div>`;
@@ -235,15 +256,84 @@
     return out;
   }
 
+  /* Statuspage: page indicator for huge PoP lists; worst-of for Cursor-scale.
+     partial_outage/under_maintenance = DEG/warn — never equal major_outage. */
+  function componentSeverity(st){
+    st=(st||'').toLowerCase();
+    if(st==='operational') return {rank:0, ok:'ok'};
+    if(st==='under_maintenance') return {rank:1, ok:'warn'};
+    if(st==='degraded_performance') return {rank:2, ok:'warn'};
+    if(st==='partial_outage') return {rank:2, ok:'warn'};
+    if(st==='major_outage') return {rank:4, ok:'bad'};
+    return {rank:2, ok:'warn'};
+  }
+  function indicatorSeverity(ind){
+    ind=(ind||'none').toLowerCase();
+    if(ind==='none'||ind==='operational') return 0;
+    if(ind==='minor') return 2;
+    if(ind==='major') return 4;
+    if(ind==='critical') return 5;
+    return 2;
+  }
+  function infoFromSeverity(rank){
+    if(rank>=5) return {level:.08,label:'CRITICAL',color:RED};
+    if(rank>=4) return {level:.28,label:'MAJOR',color:RED};
+    if(rank>=2) return {level:.58,label:'DEGRADED',color:YELLOW};
+    if(rank>=1) return {level:.72,label:'MAINTENANCE',color:YELLOW};
+    return {level:1,label:'OPERATIONAL',color:GREEN};
+  }
+  function pickStatuspageComps(raw){
+    const mapped=(raw||[]).filter(c=>!c.group).map(c=>{
+      const sev=componentSeverity(c.status);
+      return {name:c.name,status:c.status,ok:sev.ok,rank:sev.rank};
+    });
+    mapped.sort((a,b)=>b.rank-a.rank||a.name.localeCompare(b.name));
+    const interesting=mapped.filter(c=>c.rank>0);
+    const okOnly=mapped.filter(c=>c.rank===0);
+    const CAP=8;
+    if(interesting.length>=CAP) return interesting.slice(0,CAP);
+    return interesting.concat(okOnly.slice(0,CAP-interesting.length));
+  }
   async function loadStatuspage(s){
     const bust='?_='+Date.now();
     const [sumRes,incRes]=await Promise.all([fetch(s.summary+bust,{cache:'no-store'}),fetch(s.incidents+bust,{cache:'no-store'})]);
     if(!sumRes.ok) throw new Error('summary HTTP '+sumRes.status);
     const sum=await sumRes.json();
-    const info=levelFromIndicator(sum.status&&sum.status.indicator); info.detail=(sum.status&&sum.status.description)||'';
-    const comps=(sum.components||[]).filter(c=>!c.group).slice(0,5).map(c=>({name:c.name,status:c.status,ok:c.status==='operational'?'ok':(c.status==='degraded_performance'||c.status==='partial_outage'?'warn':'bad')}));
+    const pageInd=(sum.status&&sum.status.indicator)||'none';
+    const pageRank=indicatorSeverity(pageInd);
+    const rawComps=(sum.components||[]).filter(c=>!c.group);
+    let worstCompRank=0;
+    let worstCompName='';
+    rawComps.forEach(c=>{
+      const sev=componentSeverity(c.status);
+      if(sev.rank>worstCompRank){ worstCompRank=sev.rank; worstCompName=c.name; }
+    });
+    const HUGE=40;
+    let gaugeRank;
+    if(rawComps.length>HUGE){
+      // Cloudflare-scale: page indicator drives gauge (don't peg RED from city PoPs)
+      gaugeRank=pageRank;
+    } else {
+      // Cursor-scale: never invent green — max(page, worst named component)
+      gaugeRank=Math.max(pageRank, worstCompRank);
+    }
+    const info=infoFromSeverity(gaugeRank);
+    info.detail=(sum.status&&sum.status.description)||'';
+    if(rawComps.length<=HUGE && worstCompRank>pageRank && worstCompName){
+      const wc=rawComps.find(c=>c.name===worstCompName);
+      info.detail=worstCompName+' — '+(wc&&wc.status||'');
+    }
+    const comps=pickStatuspageComps(sum.components||[]);
     let incidents=[];
-    if(incRes.ok){ const inc=await incRes.json(); incidents=parseIncidents(s.id,inc); const open=incidents.filter(i=>i.active); if(open.length){ info.detail=open[0].name+' — '+open[0].status; if(info.level>.5){info.level=.4;info.label='INCIDENT';info.color=YELLOW;} } }
+    if(incRes.ok){
+      const inc=await incRes.json();
+      incidents=parseIncidents(s.id,inc);
+      const open=incidents.filter(i=>i.active);
+      if(open.length){
+        info.detail=open[0].name+' — '+open[0].status;
+        if(gaugeRank<2){ Object.assign(info, infoFromSeverity(2)); }
+      }
+    }
     state[s.id].incidents=incidents; setCard(s.id,info,comps);
   }
 
@@ -284,7 +374,7 @@
     else info={level:1,label:'OPERATIONAL',color:GREEN,detail:'All parsed xAI services available.'};
     const incidents=[];
     if(bad){ incidents.push({service:'xai',name:'One or more xAI services marked outage on status.x.ai',status:'ongoing',start:now(),end:now(),active:true,liveOnly:true}); }
-    state.xai.incidents=incidents; setCard('xai',info,comps.slice(0,5));
+    comps.sort((a,b)=>{const ra=a.ok==='bad'?2:a.ok==='warn'?1:0;const rb=b.ok==='bad'?2:b.ok==='warn'?1:0;return rb-ra;}); state.xai.incidents=incidents; setCard('xai',info,comps);
   }
 
   function renderTimeline(){
@@ -328,22 +418,23 @@
     document.getElementById('updated').textContent=new Date().toLocaleString();
     document.getElementById('footMsg').textContent='browser fetches · auto 30s';
   }
-  const LIVE_THEMES=new Set(['night','leonardo']);
-  const THEME_ALIASES={folio:'leonardo',r8:'night',dark:'night'};
+  const LIVE_THEMES=new Set(['night','leonardo','skippy','spacex-elon','claude','cursor','github']);
+  const THEME_ALIASES={folio:'leonardo',r8:'night',dark:'night',spacex:'spacex-elon',elon:'spacex-elon'};
+  const THEME_STAMP={night:'r11',leonardo:'r11·FOLIO',skippy:'r11·SKIPPY','spacex-elon':'r11·ELON',claude:'r11·CLAUDE',cursor:'r11·CURSOR',github:'r11·GITHUB'};
+  const THEME_META={night:'#050708',leonardo:'#F3E6CF',skippy:'#06080A','spacex-elon':'#05070A',claude:'#F4EBE3',cursor:'#0B0D12',github:'#0D1117'};
   function resolveTheme(raw){
     let t=String(raw||'night').toLowerCase().trim();
     if(THEME_ALIASES[t]) t=THEME_ALIASES[t];
     if(LIVE_THEMES.has(t)) return t;
-    return 'night'; // stubs / unknown → night (do not break)
+    return 'night';
   }
   function applyTheme(name){
     const theme=resolveTheme(name);
-    const leo=theme==='leonardo';
-    if(leo) document.documentElement.setAttribute('data-theme','leonardo');
-    else document.documentElement.removeAttribute('data-theme');
+    if(theme==='night') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', theme);
     try{ localStorage.setItem('gauge-theme', theme); }catch(e){}
     const stamp=document.getElementById('stamp');
-    if(stamp) stamp.textContent=leo?'r10·FOLIO':'r10';
+    if(stamp) stamp.textContent=THEME_STAMP[theme]||'r11';
     const sel=document.getElementById('themeSelect');
     if(sel){
       const opt=[...sel.options].find(o=>o.value===theme && !o.disabled);
@@ -351,7 +442,7 @@
       else sel.value='night';
     }
     const meta=document.querySelector('meta[name="theme-color"]');
-    if(meta) meta.setAttribute('content', leo?'#F3E6CF':'#050708');
+    if(meta) meta.setAttribute('content', THEME_META[theme]||'#050708');
     refreshThemeConsts();
   }
 
@@ -378,7 +469,7 @@
     themeSelect.addEventListener('change',()=>{
       const v=themeSelect.value;
       // disabled options cannot fire change; still guard stubs
-      if(!LIVE_THEMES.has(v)){ themeSelect.value=isLeonardo()?'leonardo':'night'; return; }
+      if(!LIVE_THEMES.has(v)){ const cur=currentTheme(); themeSelect.value=LIVE_THEMES.has(cur)?cur:'night'; return; }
       applyTheme(v);
       refreshAll();
     });
