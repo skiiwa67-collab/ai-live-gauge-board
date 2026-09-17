@@ -8,7 +8,9 @@
     {id:'openai',name:'OPENAI / CHATGPT',theme:'openai',themeLabel:'NEON LAB',official:'https://status.openai.com/',summary:'https://status.openai.com/api/v2/summary.json',incidents:'https://status.openai.com/api/v2/incidents.json',kind:'statuspage',color:'#5EEAD4'},
     {id:'xai',name:'xAI / GROK',theme:'xai',themeLabel:'ROCKET / SPACE',official:'https://status.x.ai/',summary:'https://status.x.ai/',incidents:null,kind:'xai-html',color:'#FCA5A5'},
     {id:'github',name:'GITHUB',theme:'github',themeLabel:'COMMIT GRAPH',official:'https://www.githubstatus.com/',summary:'https://www.githubstatus.com/api/v2/summary.json',incidents:'https://www.githubstatus.com/api/v2/incidents.json',kind:'statuspage',color:'#93C5FD'},
-    {id:'cursor',name:'CURSOR',theme:'cursor',themeLabel:'IDE / AGENTS',official:'https://status.cursor.com/',summary:'https://status.cursor.com/api/v2/summary.json',incidents:'https://status.cursor.com/api/v2/incidents.json',kind:'statuspage',color:'#FBBF24'}
+    {id:'cursor',name:'CURSOR',theme:'cursor',themeLabel:'IDE / AGENTS',official:'https://status.cursor.com/',summary:'https://status.cursor.com/api/v2/summary.json',incidents:'https://status.cursor.com/api/v2/incidents.json',kind:'statuspage',color:'#FBBF24'},
+    {id:'cloudflare',name:'CLOUDFLARE',theme:'cloudflare',themeLabel:'EDGE / CDN',official:'https://www.cloudflarestatus.com/',summary:'https://www.cloudflarestatus.com/api/v2/summary.json',incidents:'https://www.cloudflarestatus.com/api/v2/incidents.json',kind:'statuspage',color:'#F97316'},
+    {id:'notion',name:'NOTION',theme:'notion',themeLabel:'DOCS / WIKI',official:'https://www.notion-status.com/',summary:'https://www.notion-status.com/api/v2/summary.json',incidents:'https://www.notion-status.com/api/v2/incidents.json',kind:'statuspage',color:'#A3A3A3'}
   ];
   const grid=document.getElementById('grid');
   const state={};
@@ -39,6 +41,8 @@
     else if(s.theme==='claude'){ ctx.strokeStyle='rgba(196,181,253,.35)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(28,36); ctx.quadraticCurveTo(60,10,90,34); ctx.stroke(); }
     else if(s.theme==='openai'){ ctx.strokeStyle='rgba(94,234,212,.28)'; ctx.lineWidth=1; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.arc(42,34,6+i*7,0,Math.PI*2); ctx.stroke(); } }
     else if(s.theme==='cursor'){ ctx.strokeStyle='rgba(251,191,36,.35)'; ctx.lineWidth=1.5; ctx.strokeRect(30,22,28,28); ctx.beginPath(); ctx.moveTo(34,50); ctx.lineTo(44,36); ctx.lineTo(54,50); ctx.stroke(); }
+    else if(s.theme==='cloudflare'){ ctx.strokeStyle='rgba(249,115,22,.4)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(28,44); ctx.quadraticCurveTo(48,18,78,40); ctx.quadraticCurveTo(58,48,40,42); ctx.stroke(); }
+    else if(s.theme==='notion'){ ctx.strokeStyle='rgba(163,163,163,.4)'; ctx.lineWidth=1.5; ctx.strokeRect(34,20,28,34); ctx.beginPath(); ctx.moveTo(40,28); ctx.lineTo(56,28); ctx.moveTo(40,36); ctx.lineTo(56,36); ctx.moveTo(40,44); ctx.lineTo(52,44); ctx.stroke(); }
     else { for(let i=0;i<8;i++){ const h=6+(i*13)%18; ctx.fillStyle='rgba(147,197,253,.28)'; ctx.fillRect(28+i*8,52-h,5,h);} }
     ctx.lineWidth=11; ctx.lineCap='round'; ctx.strokeStyle='rgba(139,152,148,.18)'; ctx.beginPath(); ctx.arc(cx,cy,r,start,end,false); ctx.stroke();
     ctx.strokeStyle=info.color; ctx.shadowColor=info.color; ctx.shadowBlur=10; ctx.beginPath(); ctx.arc(cx,cy,r,start,ang(level),false); ctx.stroke(); ctx.shadowBlur=0;
